@@ -44,7 +44,7 @@ jobs:
        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file kong1.yaml
        
      - name: deck ping
-       run: deck ping --kong-addr http://http://15.206.171.91:8001
+       run: deck ping --kong-addr http://15.206.171.91:8001
         
       
          
