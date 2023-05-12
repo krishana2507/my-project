@@ -26,11 +26,13 @@ jobs:
       - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Install deck 
+        run: |
+
+         curl -sL https://github.com/kong/deck/releases/download/v1.17.2/deck_1.17.2_linux_amd64.tar.gz -o deck.tar.gz
+         tar -xf deck.tar.gz -C /tmp gf
+         sudo cp /tmp/deck /usr/local/bin/
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: deck ping
+        run: deck ping --kong-addr "http://localhost:8001"
