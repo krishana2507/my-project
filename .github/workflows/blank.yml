@@ -26,6 +26,10 @@ jobs:
        run: |
           wget https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz
           tar -xf inso-linux-3.12.0.tar.xz
+          
+     - name: Lint OpenAPI Spec
+       run: ./inso lint spec insomnia.yaml
+
       # This will insatll deck  
      - name: Install Deck
        run: |
