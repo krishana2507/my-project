@@ -32,7 +32,7 @@ jobs:
        
      - name: Generate kong.yaml
        run: ./inso generate config insomnia.yaml --type declarative -o kong.yaml
-
+       
       # This will insatll deck  
      - name: Install Deck
        run: |
@@ -47,7 +47,7 @@ jobs:
        run: deck ping --kong-addr http://15.206.171.91:8001
        
      - name: deck dump
-       run: deck dump test.yaml        
+       run: deck dump --kong-addr http://15.206.171.91:8001 --override 
       
          
 
