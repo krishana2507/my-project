@@ -51,9 +51,8 @@ jobs:
        
      - name: download jq
        run: |
-        yum install jq -y
-        rpm -qa | grep -i jq
-        jq -Version
+        sudo apt install jq -y
+        jq --version
        
       
          
