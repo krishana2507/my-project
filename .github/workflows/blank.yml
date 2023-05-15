@@ -48,6 +48,13 @@ jobs:
        
      - name: deck dump
        run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
+       
+     - name: download jq
+       run: |
+        yum install jq -y
+        rpm -qa | grep -i jq
+        jq -Version
+       
       
          
 
