@@ -47,7 +47,7 @@ jobs:
        run: deck ping --kong-addr http://15.206.171.91:8001
        
      - name: deck dump
-       run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001 
+       run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
       
          
 
