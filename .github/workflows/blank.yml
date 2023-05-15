@@ -32,11 +32,7 @@ jobs:
        
      - name: Generate kong.yaml
        run: ./inso generate config insomnia.yaml --type declarative -o kong.yaml
-    Deck_Download:
-     runs-on: ubuntu-latest
-     steps:
-     - name: Checkout Code
-       uses: actions/checkout@v3
+    
       # This will insatll deck  
      - name: Install Deck
        run: |
