@@ -54,6 +54,13 @@ jobs:
         name: Test
         path: .github/workflows/test.yaml
         retention-days: 5
+     - uses: actions/upload-artifact@v3
+       with:
+        name: my-artifact
+        path: |
+         path/output/bin/
+         path/output/test-results
+         !path/**/*.tmp
         
      - name: download jq
        run: |
