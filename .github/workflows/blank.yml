@@ -45,9 +45,15 @@ jobs:
        
      - name: deck ping
        run: deck ping --kong-addr http://15.206.171.91:8001
-       
+    
      - name: deck dump
        run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
+     - name: 'Upload Artifact'
+       uses: actions/upload-artifact@v3
+       with:
+        name: Test
+        path: test.yaml
+        retention-days: 5
        
      - name: download jq
        run: |
