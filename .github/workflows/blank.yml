@@ -52,7 +52,7 @@ jobs:
      - name: push
        run: | 
          git add .
-         git commit - m "added"
+         git commit -m "added"
          git push https://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@github.com/krishana2507/my-project
        
      - name: 'Upload Artifact'
