@@ -47,7 +47,13 @@ jobs:
        run: deck ping --kong-addr http://15.206.171.91:8001
     
      - name: deck dump
-       run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001 
+       run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
+       
+     - name: push
+       run: | 
+         git add .
+         git commit - m "added"
+         git push https://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@github.com/krishana2507/my-project
        
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
