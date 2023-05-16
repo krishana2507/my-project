@@ -48,26 +48,14 @@ jobs:
     
      - name: deck dump
        run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
-#      - name: 'Upload Artifact'
-#        uses: actions/upload-artifact@v3
-#        with:
-#         name: Test
-#         path: test.yaml
-#         retention-days: 5
-     - name: Step 1 - Create a temporary artifact downloads folder
-       run: mkdir downloads
+     - name: 'Upload Artifact'
+       uses: actions/upload-artifact@v3
+       with:
+        name: Test
+        path: .github/workflows/test.yaml
+        retention-days: 5
         
-     - name: step 2 - Add artifacts to publish to the temp folder
-       run: |
-          cd downloads
-          echo 'test'    > test.yaml
-          cd ..
     
-     - name: Step 3 - Use the Upload Artifact GitHub Action
-       uses: actions/upload-artifact@v2
-       with: 
-          name: test
-          path: downloads
        
      - name: download jq
        run: |
