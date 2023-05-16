@@ -55,8 +55,6 @@ jobs:
         path: .github/workflows/test.yaml
         retention-days: 5
         
-    
-       
      - name: download jq
        run: |
         sudo apt install jq -y
