@@ -49,13 +49,26 @@ jobs:
      - name: deck dump
        run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
    
+     - name: Commit files
+       id: commit
+       run: |
+          git config --local user.email "krishna.sharma@neosalpha.com"
+          git config --local user.name "krishna2507"
+          git add \*.yaml
+          if [-z "$(git status --porcelain)"]; then
+             echo "::set-output name=push::false"
+          else
+             git commit -m "Add changes" -a
+             echo "::set-output name=push::true"
+          fi
+       shell: bash
        
-     - name: 'Upload Artifact'
-       uses: actions/upload-artifact@v3
+     - name: Push changes
+       if: steps.commit.outputs.push == 'true'
+       uses: ad-m/github-push-action@master
        with:
-        name: Test
-        path: test.yaml
-        retention-days: 5
+           github_token: ${{ secrets.GITHUB_TOKEN }}
+
    
         
      - name: download jq
