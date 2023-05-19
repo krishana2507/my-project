@@ -44,10 +44,10 @@ jobs:
        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file kong1.yaml
        
      - name: deck ping
-       run: deck ping --kong-addr http://15.206.171.91:8001
+       run: deck ping --kong-addr http://35.154.18.198:8001
     
      - name: deck dump
-       run: deck dump -o test.yaml --kong-addr http://15.206.171.91:8001
+       run: deck dump -o test.yaml --kong-addr http://35.154.18.198:8001
    
      - name: Commit files
        id: commit
