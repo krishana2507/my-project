@@ -44,10 +44,10 @@ jobs:
        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file kong1.yaml
        
      - name: deck ping
-       run: deck ping --kong-addr http://35.154.18.198:8001
+       run: deck ping --kong-addr http://13.127.240.238:8001
     
      - name: deck dump
-       run: deck dump -o test.yaml --kong-addr http://35.154.18.198:8001
+       run: deck dump -o test.yaml --kong-addr http://13.127.240.238:8001
    
      - name: Commit files
        id: commit
@@ -75,6 +75,15 @@ jobs:
        run: |
         sudo apt install jq -y
         jq --version
+        
+     - name: API Versioning
+       run: |
+         export w="/default"
+         export v="/v1.1"
+         echo $w
+         echo $v
+         cat test.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > api.yaml
+         deck sync -s api.yaml 
        
       
          
