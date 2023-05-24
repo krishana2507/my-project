@@ -84,7 +84,7 @@ jobs:
        run: |
          export w="/default"
          export v="/v1.1"
-         cat versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > api.yaml
+         cat versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
          deck sync -s api.yaml --kong-addr http://13.127.240.238:8001
          git add api.yaml
          git commit -m "push cmoomit"
