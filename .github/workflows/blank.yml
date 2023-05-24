@@ -76,6 +76,10 @@ jobs:
         sudo apt install jq -y
         jq --version
         
+     - name: download yq
+       run: |
+         sudo apt install yq -y
+         yq --version
      - name: API Versioning
        run: |
          export w="/default"
@@ -83,7 +87,7 @@ jobs:
          echo $w
          echo $v
          cat test.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > api.yaml
-         deck sync -s api.yaml 
+          
        
       
          
