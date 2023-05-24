@@ -87,13 +87,9 @@ jobs:
          echo $w
          echo $v
          cat test.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > api.yaml
-        
-     - name: Push changes
-       if: steps.commit.outputs.push == 'true'
-       uses: ad-m/github-push-action@master
-       with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
-      
+         git add api.yaml
+         git commit -m "new cmoomit"
+         git push
          
 
      
