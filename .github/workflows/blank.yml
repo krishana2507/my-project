@@ -90,8 +90,7 @@ jobs:
          git commit -m "new cmoomit"
          git push
          
-     - name: reset kong
-       run: deck reset --kong-addr http://13.127.240.238:8001
+    
          
 
      
