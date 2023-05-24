@@ -87,7 +87,7 @@ jobs:
          cat test.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > api.yaml
          deck sync -s api.yaml --kong-addr http://13.127.240.238:8001
          git add api.yaml
-         git commit -m "new cmoomit"
+         git commit -m "push cmoomit"
          git push
          
     
