@@ -78,7 +78,7 @@ jobs:
         
      - name: download yq
        run: |
-         sudo apt install yq -y
+         sudo snap install yq
          yq --version
      - name: API Versioning
        run: |
