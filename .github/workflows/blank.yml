@@ -44,10 +44,10 @@ jobs:
        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file kong1.yaml
        
      - name: deck ping
-       run: deck ping --kong-addr http://13.127.240.238:8001
+       run: deck ping --kong-addr http://13.233.109.117:8001
     
      - name: deck dump
-       run: deck dump -o api-versioning.yaml --kong-addr http://13.127.240.238:8001
+       run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
    
      - name: Commit files
        id: commit
@@ -85,7 +85,7 @@ jobs:
          export w="/default"
          export v="/v1.1"
          cat api-versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
-         deck sync -s new-api.yaml --kong-addr http://13.127.240.238:8001
+         deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
          git add new-api.yaml
          git commit -m "push cmoomit"
          git push
