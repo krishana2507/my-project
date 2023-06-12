@@ -1,0 +1,20 @@
+_format_version: "3.0"
+services:
+- host: httpbin.org
+  name: MyService_API
+  path: /
+  port: 443
+  protocol: https
+  routes:
+  - methods:
+    - GET
+    name: MyService_API-getIpAddress
+    paths:
+    - ~/ip$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_insomnia.yaml
+  tags:
+  - OAS3_import
+  - OAS3file_insomnia.yaml

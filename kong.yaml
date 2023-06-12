@@ -1,0 +1,20 @@
+_format_version: "1.1"
+services:
+  - name: MyService_API
+    protocol: https
+    host: httpbin.org
+    port: 443
+    path: /
+    plugins: []
+    routes:
+      - tags:
+          &a1
+          - OAS3_import
+          - OAS3file_insomnia.yaml
+        name: MyService_API-getIpAddress
+        methods:
+          - GET
+        paths:
+          - /ip$
+        strip_path: false
+    tags: *a1
