@@ -16,7 +16,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-addPet
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -34,7 +34,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-createUser
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -52,7 +52,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-createUsersWithListInput
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -70,7 +70,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-deleteOrder
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -88,7 +88,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-deletePet
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -106,7 +106,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-deleteUser
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -124,7 +124,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-findPetsByStatus
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -142,7 +142,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-findPetsByTags
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -160,7 +160,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-getInventory
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         plugins:
           - config:
               anonymous: null
@@ -200,7 +200,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-getOrderById
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -218,7 +218,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-getPetById
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         plugins:
           - config:
               anonymous: null
@@ -258,7 +258,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-getUserByName
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -276,7 +276,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-loginUser
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -294,7 +294,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-logoutUser
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -312,7 +312,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-placeOrder
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -330,7 +330,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-updatePet
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -348,7 +348,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-updatePetWithForm
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -366,7 +366,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-updateUser
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
@@ -384,7 +384,7 @@ services:
         name: Swagger_Petstore_-_OpenAPI_3.0-uploadFile
         path_handling: v0
         paths:
-          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
+          - /default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1/default/v1.1~/pet/(?<petId>[^/]+)/uploadImage$
         preserve_host: false
         protocols:
           - http
