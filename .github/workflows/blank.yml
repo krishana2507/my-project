@@ -40,34 +40,34 @@ jobs:
         tar -xf deck.tar.gz -C /tmp 
         sudo cp /tmp/deck /usr/local/bin/
         
-#      - name: update
-#        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong-spec.yaml --output-file kong-spec1.yaml
+     - name: update
+       run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong-spec.yaml --output-file kong-spec1.yaml
        
-#      - name: deck ping
-#        run: deck ping --kong-addr http://13.233.109.117:8001
+     - name: deck ping
+       run: deck ping --kong-addr http://13.233.109.117:8001
     
-#      - name: deck dump
-#        run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
+     - name: deck dump
+       run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
    
-#      - name: Commit files
-#        id: commit
-#        run: |
-#           git config --local user.email "krishna.sharma@neosalpha.com"
-#           git config --local user.name "krishna2507"
-#           git add \*.yaml
-#           if [-z "$(git status --porcelain)"]; then
-#              echo "::set-output name=push::false"
-#           else
-#              git commit -m "Add changes sd" -a
-#              echo "::set-output name=push::true"
-#           fi
-#        shell: bash
+     - name: Commit files
+       id: commit
+       run: |
+          git config --local user.email "krishna.sharma@neosalpha.com"
+          git config --local user.name "krishna2507"
+          git add \*.yaml
+          if [-z "$(git status --porcelain)"]; then
+             echo "::set-output name=push::false"
+          else
+             git commit -m "Add changes sd" -a
+             echo "::set-output name=push::true"
+          fi
+       shell: bash
        
-#      - name: Push changes
-#        if: steps.commit.outputs.push == 'true'
-#        uses: ad-m/github-push-action@master
-#        with:
-#            github_token: ${{ secrets.GITHUB_TOKEN }}
+     - name: Push changes
+       if: steps.commit.outputs.push == 'true'
+       uses: ad-m/github-push-action@master
+       with:
+           github_token: ${{ secrets.GITHUB_TOKEN }}
            
 #      - name: download jq
 #        run: |
