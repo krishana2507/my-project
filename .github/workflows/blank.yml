@@ -85,7 +85,7 @@ jobs:
        run: |
          export w="/default"
          export v="/v1.1"
-         cat api-versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+         cat kong-spec1.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
          deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
          git add new-api.yaml
          git commit -m "push cmoomit"
