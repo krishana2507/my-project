@@ -49,8 +49,8 @@ jobs:
 #      - name: deck dump
 #        run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
        
-     - name: decl sync
-       run: deck sync -s kong-spec1.yaml --kong-addr http://13.233.109.117:8001
+#      - name: decl sync
+#        run: deck sync -s kong-spec1.yaml --kong-addr http://13.233.109.117:8001
    
      - name: Commit files
        id: commit
@@ -72,24 +72,24 @@ jobs:
        with:
            github_token: ${{ secrets.GITHUB_TOKEN }}
            
-#      - name: download jq
-#        run: |
-#         sudo apt install jq -y
-#         jq --version
+     - name: download jq
+       run: |
+        sudo apt install jq -y
+        jq --version
         
-#      - name: download yq
-#        run: |
-#          sudo snap install yq
-#          yq --version
-#      - name: API Versioning
-#        run: |
-#          export w="/default"
-#          export v="/v1.1"
-#          cat api-versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
-#          deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
-#          git add new-api.yaml
-#          git commit -m "push cmoomit"
-#          git push
+     - name: download yq
+       run: |
+         sudo snap install yq
+         yq --version
+     - name: API Versioning
+       run: |
+         export w="/default"
+         export v="/v1.1"
+         cat api-versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+         deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
+         git add new-api.yaml
+         git commit -m "push cmoomit"
+         git push
 
    
         
