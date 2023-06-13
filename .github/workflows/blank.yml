@@ -31,7 +31,7 @@ jobs:
        run: ./inso lint spec insomnia.yaml
        
      - name: Generate kong.yaml
-       run: ./inso generate config insomnia.yaml --type declarative -o kong.yaml
+       run: ./inso generate config spec.yaml --type declarative -o kong-spec.yaml
     
       # This will insatll deck  
      - name: Install Deck
@@ -41,13 +41,13 @@ jobs:
         sudo cp /tmp/deck /usr/local/bin/
         
      - name: update
-       run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file kong1.yaml
+       run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong-spec.yaml --output-file kong-spec1.yaml
        
      - name: deck ping
        run: deck ping --kong-addr http://13.233.109.117:8001
     
-     - name: deck dump
-       run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
+#      - name: deck dump
+#        run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
    
      - name: Commit files
        id: commit
@@ -68,6 +68,25 @@ jobs:
        uses: ad-m/github-push-action@master
        with:
            github_token: ${{ secrets.GITHUB_TOKEN }}
+           
+     - name: download jq
+       run: |
+        sudo apt install jq -y
+        jq --version
+        
+#      - name: download yq
+#        run: |
+#          sudo snap install yq
+#          yq --version
+#      - name: API Versioning
+#        run: |
+#          export w="/default"
+#          export v="/v1.1"
+#          cat api-versioning.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+#          deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
+#          git add new-api.yaml
+#          git commit -m "push cmoomit"
+#          git push
 
    
         
