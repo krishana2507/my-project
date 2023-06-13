@@ -120,7 +120,7 @@ jobs:
 
         run: |          
 
-          portal deploy --preserve default 
+          portal deploy -D default --preserve 
 
         env:
 
