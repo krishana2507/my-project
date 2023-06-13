@@ -73,7 +73,7 @@ jobs:
 
     - name: check
 
-      run: deck sync -s new-kong.yaml --kong-addr http://13.233.109.117/:8001
+      run: deck sync -s new-kong.yaml --kong-addr http://13.233.109.117:8001
     - name: Commit files
       id: commit
       run: |
@@ -123,7 +123,7 @@ jobs:
 
         env:
 
-          KONG_ADMIN_URL: http://13.233.109.117/:8001
+          KONG_ADMIN_URL: http://13.233.109.117:8001
           
 #           - name: Commit files
 #        id: commit
