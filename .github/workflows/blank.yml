@@ -48,6 +48,9 @@ jobs:
     
      - name: deck dump
        run: deck dump -o api-versioning.yaml --kong-addr http://13.233.109.117:8001
+       
+     - name: decl sync
+       run: deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
    
      - name: Commit files
        id: commit
