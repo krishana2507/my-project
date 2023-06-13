@@ -28,7 +28,7 @@ jobs:
           tar -xf inso-linux-3.12.0.tar.xz
           
      - name: Lint OpenAPI Spec
-       run: ./inso lint spec insomnia.yaml
+       run: ./inso lint spec spec.yaml
        
      - name: Generate kong.yaml
        run: ./inso generate config spec.yaml --type declarative -o kong-spec.yaml
