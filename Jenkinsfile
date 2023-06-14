@@ -29,5 +29,10 @@ pipeline {
         sh './inso generate config ./petstore.yaml --type declarative -o ./kong.yaml'
       }
     }
+    stage('Check deck version') {
+      steps {
+        sh 'deck version'
+      }
+    }
   }
 }
