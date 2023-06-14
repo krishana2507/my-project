@@ -34,5 +34,15 @@ pipeline {
         sh 'deck version'
       }
     }
+     stage('Update') {
+      steps {
+        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml'
+      }
+    }
+     stage('Check') {
+      steps {
+        sh 'deck sync -s new-kong.yaml --kong-addr http://13.233.109.117:8001'
+      }
+    }
   }
 }
