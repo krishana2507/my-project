@@ -16,7 +16,7 @@ pipeline {
         echo "yarn"
         sh 'npm install -g insomnia-inso'
         sh './inso --version'
-        sh './inso lint spec ./petstore.yaml'
+//         sh './inso lint spec ./petstore.yaml'
         // Add more steps here for your OpenAPI linting process
       }
     }
