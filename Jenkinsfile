@@ -38,7 +38,7 @@ pipeline {
     }
      stage('Update') {
       steps {
-        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file ./kong.yaml --output-file ./new-kong.yaml'\
+        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file ./kong.yaml --output-file ./new-kong.yaml'
         echo "conevert"
       }
     }
