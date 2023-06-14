@@ -22,6 +22,7 @@ pipeline {
     stage('Lint OpenAPI Spec') {
       steps {
         sh './inso lint spec ./petstore.yaml'
+        echo "spec"
     }
     }
     stage('Generate kong.yaml') {
@@ -32,16 +33,19 @@ pipeline {
     stage('Check deck version') {
       steps {
         sh 'deck version'
+        echo "deck"
       }
     }
      stage('Update') {
       steps {
-        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml'
+        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml'\
+        echo "conevert"
       }
     }
      stage('Check') {
       steps {
         sh 'deck sync -s new-kong.yaml --kong-addr http://13.233.109.117:8001'
+        echo "sync"
       }
     }
   }
