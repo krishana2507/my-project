@@ -13,16 +13,17 @@ pipeline {
         sh 'node --version' // Example step using Node.js
         sh 'npm --version'  // Example step using npm
         sh 'yarn --version' // Example step using yarn
+        echo "yarn"
         // Add more steps here for your OpenAPI linting process
       }
     }
-    stage('Lint OpenAPI Spec') {
-      steps {
-        sh 'wget https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz'
-        echo "Hello"
-        sh 'tar -xf inso-linux-3.12.0.tar.xz'
-        sh './inso lint spec petstore.yaml'
-      }
-    }
+//     stage('Lint OpenAPI Spec') {
+//       steps {
+//         sh 'wget https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz'
+//         echo "Hello"
+//         sh 'tar -xf inso-linux-3.12.0.tar.xz'
+//         sh './inso lint spec petstore.yaml'
+//       }
+//     }
   }
 }
