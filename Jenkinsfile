@@ -5,6 +5,7 @@ pipeline {
     stage('Install Node.js') {
       steps {
         tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+        echo "node Install"
       }
     }
     stage('node OpenAPI Spec') {
