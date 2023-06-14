@@ -14,7 +14,7 @@ pipeline {
         sh 'npm --version'  // Example step using npm
         sh 'yarn --version' // Example step using yarn
         echo "yarn"
-        sh 'npm install -g insomnia-inso'
+        sh 'npm install -g insomnia-inso --verbose'
         sh './inso --version'
 //         sh './inso lint spec ./petstore.yaml'
         // Add more steps here for your OpenAPI linting process
