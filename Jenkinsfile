@@ -24,5 +24,10 @@ pipeline {
         sh './inso lint spec ./petstore.yaml'
     }
     }
+    stage('Generate kong.yaml') {
+      steps {
+        sh './inso generate config ./petstore.yaml --type declarative -o ./kong.yaml'
+      }
+    }
   }
 }
