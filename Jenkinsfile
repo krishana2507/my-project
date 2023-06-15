@@ -76,7 +76,6 @@ pipeline {
         script {
           if (env.BRANCH_NAME == 'main') {
             // Publish API to dev portal only for the main branch
-            sh 'npm install -g kong-portal-cli'
             sh 'portal deploy -D default --preserve'
           }
         }
