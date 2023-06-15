@@ -1,4 +1,4 @@
-pipeline {   
+pipeline {
   agent any
 
   stages {
@@ -15,7 +15,6 @@ pipeline {
         sh 'yarn --version' // Example step using yarn
         echo "yarn"
         sh './inso --version'
-//         sh './inso lint spec ./petstore.yaml'
         // Add more steps here for your OpenAPI linting process
       }
     }
@@ -23,7 +22,7 @@ pipeline {
       steps {
         sh './inso lint spec ./petstore.yaml'
         echo "spec"
-    }
+      }
     }
     stage('Generate kong.yaml') {
       steps {
@@ -36,16 +35,51 @@ pipeline {
         echo "deck"
       }
     }
-     stage('Update') {
+    stage('Update') {
       steps {
         sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file ./kong.yaml --output-file ./new-kong.yaml'
-        echo "conevert"
+        echo "convert"
       }
     }
-     stage('Check') {
+    stage('Check') {
       steps {
         sh 'deck sync -s ./new-kong.yaml --kong-addr http://13.233.109.117:8001'
         echo "sync"
+      }
+    }
+    stage('Commit files') {
+      steps {
+        sh '''
+          git config --local user.email "krishna.sharma@neosalpha.com"
+          git config --local user.name "krishna2507"
+          git add *.yaml
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "::set-output name=push::false"
+          else
+            git commit -m "Add changes sd" -a
+            echo "::set-output name=push::true"
+          fi
+        '''
+        script {
+          if (env.BRANCH_NAME == 'main') {
+            // Push changes only for the main branch
+            gitPushChanges()
+          } else {
+            echo 'Skipping push changes as branch is not main.'
+          }
+        }
+      }
+    }
+
+    stage('Publish OAS to dev portal') {
+      steps {
+        script {
+          if (env.BRANCH_NAME == 'main') {
+            // Publish API to dev portal only for the main branch
+            sh 'npm install -g kong-portal-cli'
+            sh 'portal deploy -D default --preserve'
+          }
+        }
       }
     }
   }
