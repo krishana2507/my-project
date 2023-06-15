@@ -1,6 +1,8 @@
 pipeline {          
   agent any
-
+  environment {
+    FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
+  }
   stages {
     stage('Install Node.js') {
       steps {
@@ -81,9 +83,6 @@ pipeline {
         }
       }
     }
-   environment {
-    FIREBASE_CREDENTIALS = credentials('pipeline-jenkins') 
-   }
    stage('Deploy to Firebase') {
       steps {
         withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
