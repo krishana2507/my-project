@@ -81,5 +81,15 @@ pipeline {
         }
       }
     }
+   environment {
+    FIREBASE_CREDENTIALS = credentials('pipeline-jenkins') 
+   }
+   stage('Deploy to Firebase') {
+      steps {
+        withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
+          sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
+        }
+      }
+   }
   }
 }
