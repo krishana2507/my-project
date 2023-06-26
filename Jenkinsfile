@@ -39,13 +39,13 @@ pipeline {
     }
     stage('Update') {
       steps {
-        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file ./kong.yaml --output-file ./new-kong.yaml'
+        sh 'deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file ./kong.yaml --output-file ./kong-new.yaml'
         echo "convert"
       }
     }
     stage('Check') {
       steps {
-        sh 'deck sync -s ./new-kong.yaml --kong-addr http://3.110.83.112:8001'
+        sh 'deck sync -s ./kong-new.yaml --kong-addr http://13.235.135.48:8001'
         echo "sync"
       }
     }
