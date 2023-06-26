@@ -45,7 +45,7 @@ pipeline {
     }
     stage('Check') {
       steps {
-        sh 'deck sync -s ./new-kong.yaml --kong-addr http://13.234.240.162:8001'
+        sh 'deck sync -s ./new-kong.yaml --kong-addr http://3.110.83.112:8001'
         echo "sync"
       }
     }
