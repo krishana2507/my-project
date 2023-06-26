@@ -90,7 +90,7 @@ pipeline {
           sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
           }
         }
-      }
+      // }
    }
   }
 }
