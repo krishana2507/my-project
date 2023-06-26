@@ -86,11 +86,11 @@ pipeline {
    stage('Deploy to Firebase') {
       steps {
         withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
-          // dir('/home/ec2-user'){
+          dir('/home/ec2-user'){
           sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
           }
         }
-      // }
+      }
    }
   }
 }
