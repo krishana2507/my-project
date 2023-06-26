@@ -83,14 +83,14 @@ pipeline {
         }
       }
     }
-   stage('Deploy to Firebase') {
-      steps {
-        withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
-          dir('/home/ec2-user@tmp'){
-          sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
-          }
-        }
-      }
-   }
+   // stage('Deploy to Firebase') {
+   //    steps {
+   //      withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
+   //        dir('/home/ec2-user@tmp'){
+   //        sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
+   //        }
+   //      }
+   //    }
+   // }
   }
 }
