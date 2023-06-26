@@ -1,8 +1,8 @@
 pipeline {                      
   agent any
-  environment {
-    FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
-  }
+  // environment {
+  //   FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
+  // }
   stages {
     stage('Install Node.js') {
       steps {
