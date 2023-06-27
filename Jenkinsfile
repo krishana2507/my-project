@@ -1,4 +1,4 @@
-pipeline {                                    
+pipeline {                                      
   agent any 
   environment {
     FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
