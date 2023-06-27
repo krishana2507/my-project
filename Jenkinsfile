@@ -83,6 +83,10 @@ pipeline {
         }
       }
     }
+   stage('change ownership')
+    steps {
+      chmod 444 ('/home/ec2-user/firebase.json')
+    }
    stage('Deploy to Firebase') {
       steps {
         withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
