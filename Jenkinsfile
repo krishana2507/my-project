@@ -85,7 +85,7 @@ pipeline {
     }
    stage('change ownership')
     steps {
-      chmod 444 ('/home/ec2-user/firebase.json')
+      chmod 777 ('/home/ec2-user/firebase.json')
     }
    stage('Deploy to Firebase') {
       steps {
