@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: '2.0' 
 info:
   description: Vitals API
   version: 2.4.0
