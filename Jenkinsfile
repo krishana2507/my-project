@@ -1,8 +1,8 @@
 pipeline {                                      
   agent any 
-  environment {
-    FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
-  }
+  // environment {
+  //   FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
+  // }
   stages {
     stage('Install Node.js') {
       steps {
@@ -84,14 +84,14 @@ pipeline {
       }
     }
    
-   stage('Deploy to Firebase') {
-      steps {
-        withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
-          dir('/home/ec2-user/firebase.json'){
-          sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
-          }
-        }
-      }
-   }
+   // stage('Deploy to Firebase') {
+   //    steps {
+   //      withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
+   //        dir('/home/ec2-user/firebase.json'){
+   //        sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
+   //        }
+   //      }
+   //    }
+   // }
   }
 }
