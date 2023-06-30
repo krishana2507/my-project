@@ -43,9 +43,30 @@ pipeline {
         echo "convert"
       }
     }
+    stage('Download jq') {
+      steps {
+        sh 'sudo apt install jq -y'
+        sh 'jq --version'
+       }
+     }
+    stage('Download yq') {
+      steps {
+        sh 'sudo snap install yq'
+        sh 'yq --version'
+        }
+     }
+    stage('API Versioning') {
+      steps {
+        script {
+          def w = '/default'
+          def v = '/v1.1'
+          sh 'cat ./kong-new.yaml | yq \'.services.[].routes.[].paths.[] = env.w + env.v + .services.[].routes.[].paths.[]\' -o yaml > new-api.yaml'
+        }
+      }
+    }
     stage('Check') {
       steps {
-        sh 'deck sync -s ./kong-new.yaml --kong-addr http://13.235.135.48:8001'
+        sh 'deck sync -s ./new-api.yaml --kong-addr http://13.233.107.130:8001'
         echo "sync"
       }
     }
