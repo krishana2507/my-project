@@ -51,10 +51,12 @@ pipeline {
      }
     stage('Download yq') {
       steps {
-        sh 'sudo snap install yq'
-        sh 'yq --version'
+                sh 'wget https://github.com/mikefarah/yq/releases/download/v4.13.2/yq_linux_amd64 -O yq'
+                sh 'chmod +x yq'
+                sh 'mv yq /usr/local/bin'
+                sh 'yq --version'
+            }
         }
-     }
     stage('API Versioning') {
       steps {
         script {
