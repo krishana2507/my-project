@@ -58,7 +58,7 @@ pipeline {
         script {
           def w = "/default"
           def v = "/v1.1"
-           sh "cat kong-spec1.yaml | yq eval '.services[].routes[].paths |= map(env.W + env.V + .)' -y > new-api.yaml"
+           sh "cat ./kong-new.yaml | yq eval '.services[].routes[].paths |= map(env.W + env.V + .)' -y > new-api.yaml"
         }
       }
     }
