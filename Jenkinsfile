@@ -45,7 +45,6 @@ pipeline {
     }
     stage('Download jq') {
       steps {
-        sh 'sudo apt install jq -y'
         sh 'jq --version'
        }
      }
