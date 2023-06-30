@@ -56,9 +56,9 @@ pipeline {
     stage('API Versioning') {
       steps {
         script {
-          def w = '/default'
-          def v = '/v1.1'
-          sh 'cat ./kong-new.yaml | yq \'.services.[].routes.[].paths.[] = env.w + env.v + .services.[].routes.[].paths.[]\' -o yaml > new-api.yaml'
+          def w = "/default"
+          def v = "/v1.1"
+           sh "cat kong-spec1.yaml | yq eval '.services[].routes[].paths |= map(env.W + env.V + .)' -y > new-api.yaml"
         }
       }
     }
