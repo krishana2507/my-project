@@ -22,13 +22,13 @@ pipeline {
     }
     stage('Lint OpenAPI Spec') {
       steps {
-        sh './inso lint spec ./petstore.yaml'
+        sh './inso lint spec ./spec.yaml'
         echo "spec"
       }
     }
     stage('Generate kong.yaml') {
       steps {
-        sh './inso generate config ./petstore.yaml --type declarative -o ./kong.yaml'
+        sh './inso generate config ./spec.yaml --type declarative -o ./kong.yaml'
       }
     }
     stage('Check deck version') {
