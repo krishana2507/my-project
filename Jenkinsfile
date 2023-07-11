@@ -24,7 +24,7 @@ pipeline {
       steps {
         sh './inso lint spec ./spec.yaml'
         echo "spec"
-        cat './spec.yaml'
+        sh 'cat ./spec.yaml'
       }
     }
     stage('Generate kong.yaml') {
