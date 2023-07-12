@@ -29,7 +29,7 @@ pipeline {
     }
     stage('Generate kong.yaml') {
       steps {
-        sh './inso generate config testing.yaml -o kong.yaml --kongVersion 3'
+        sh './inso generate config testing.yaml --type kubernetes -o kong.yaml --kongVersion 3'
       }
     }
     stage('Check deck version') {
