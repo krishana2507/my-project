@@ -27,11 +27,11 @@ pipeline {
         sh 'cat testing.yaml'
       }
     }
-    // stage('Generate kong.yaml') {
-    //   steps {
-    //     sh './inso generate config testing.yaml --type declarative -o kong.yaml'
-    //   }
-    // }
+    stage('Generate kong.yaml') {
+      steps {
+        sh './inso generate config testing.yaml --type declarative -o kong.yaml --kongVersion 3'
+      }
+    }
     stage('Check deck version') {
       steps {
         sh 'deck version'
