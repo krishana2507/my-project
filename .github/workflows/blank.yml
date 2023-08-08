@@ -68,12 +68,22 @@ jobs:
     - name: update
 
       run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
-
-
-    
-
+    - name: download jq
+      run: |
+       sudo apt install jq -y
+         jq --version
+        
+    - name: download yq
+      run: |
+          sudo snap install yq
+          yq --version
+    - name: API Versioning
+      run: |
+          export w="/default"
+          export v="/v1.1"
+          cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+          # deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
     - name: check
-
       run: deck sync -s new-kong.yaml --kong-addr http://35.154.219.40:8001
     # - name: Commit files
     #   id: commit
