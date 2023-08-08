@@ -1,5 +1,5 @@
 pipeline {                                                 
-  agent any   
+  agent any     
   stages {
     stage('Install Node.js') {
       steps {
@@ -20,8 +20,6 @@ pipeline {
     stage('Lint OpenAPI Spec') {
       steps {
         sh './inso lint spec petstore.yaml'
-        echo "spec"
-        sh 'cat petstore.yaml'
       }
     }
     stage('Generate kong.yaml') {
