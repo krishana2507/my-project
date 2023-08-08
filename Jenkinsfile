@@ -1,8 +1,5 @@
 pipeline {                                                 
   agent any   
-  // environment {
-  //   FIREBASE_CREDENTIALS = credentials('pipeline-jenkins')
-  // }
   stages {
     stage('Install Node.js') {
       steps {
@@ -65,7 +62,7 @@ pipeline {
     }
     stage('Check') {
       steps {
-        sh 'deck sync -s ./new-api.yaml --kong-addr http://43.205.110.236:8001'
+        sh 'deck sync -s ./new-api.yaml --kong-addr http://35.154.219.40:8001'
         echo "sync"
       }
     }
@@ -104,14 +101,4 @@ pipeline {
       }
     }
    
-   // stage('Deploy to Firebase') {
-   //    steps {
-   //      withCredentials([file(credentialsId: 'pipeline-jenkins', variable: 'FIREBASE_CREDENTIALS')]) {
-   //        dir('/home/ec2-user/firebase.json'){
-   //        sh 'firebase deploy --token $FIREBASE_CREDENTIALS'
-   //        }
-   //      }
-   //    }
-   // }
-  }
-}
+  
