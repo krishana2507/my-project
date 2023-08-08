@@ -75,25 +75,25 @@ jobs:
     - name: check
 
       run: deck sync -s new-kong.yaml --kong-addr http://35.154.219.40:8001
-    - name: Commit files
-      id: commit
-      run: |
-          git config --local user.email "krishna.sharma@neosalpha.com"
-          git config --local user.name "krishna2507"
-          git add \*.yaml
-          if [-z "$(git status --porcelain)"]; then
-             echo "::set-output name=push::false"
-          else
-             git commit -m "Add changes sd" -a
-             echo "::set-output name=push::true"
-          fi
-      shell: bash
+    # - name: Commit files
+    #   id: commit
+    #   run: |
+    #       git config --local user.email "krishna.sharma@neosalpha.com"
+    #       git config --local user.name "krishna2507"
+    #       git add \*.yaml
+    #       if [-z "$(git status --porcelain)"]; then
+    #          echo "::set-output name=push::false"
+    #       else
+    #          git commit -m "Add changes sd" -a
+    #          echo "::set-output name=push::true"
+    #       fi
+    #   shell: bash
        
-    - name: Push changes
-      if: steps.commit.outputs.push == 'true'
-      uses: ad-m/github-push-action@master
-      with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Push changes
+    #   if: steps.commit.outputs.push == 'true'
+    #   uses: ad-m/github-push-action@master
+    #   with:
+    #        github_token: ${{ secrets.GITHUB_TOKEN }}
   publish-customer-api-to-portal:  # Publish the API to the dev portal
   
     name: Publish OAS to dev portal
@@ -119,12 +119,12 @@ jobs:
       - name: Deploy to dev portal
 
         run: |          
-
+          sudo cp petstore.yaml workspaces/default/specs
           portal deploy -D default --preserve 
 
         env:
 
-          KONG_ADMIN_URL: http://13.233.109.117:8001
+          KONG_ADMIN_URL: http://35.154.219.40:8001
           
 
            
