@@ -87,7 +87,7 @@ jobs:
       run: |
           sed -i '1d' MockingPlugin.yaml
           cat MockingPlugin.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-
+          cat mockplugin.yaml
     
     - name: check
       run: deck sync -s new-api.yaml --kong-addr http://35.154.219.40:8001
