@@ -1,0 +1,198 @@
+_format_version: "3.0"
+services:
+- host: petstore3.swagger.io
+  name: Swagger_Petstore_-_OpenAPI_3.0
+  path: /api/v3
+  port: 443
+  protocol: https
+  routes:
+  - methods:
+    - PUT
+    name: Swagger_Petstore_-_OpenAPI_3.0-updatePet
+    paths:
+    - ~/pet$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - POST
+    name: Swagger_Petstore_-_OpenAPI_3.0-addPet
+    paths:
+    - ~/pet$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-findPetsByStatus
+    paths:
+    - ~/pet/findByStatus$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-findPetsByTags
+    paths:
+    - ~/pet/findByTags$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-getPetById
+    paths:
+    - ~/pet/(?<petId>[^/]+)$
+    plugins:
+    - config:
+        key_names:
+        - api_key
+      name: key-auth
+      tags:
+      - OAS3_import
+      - OAS3file_petstore.yaml
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - POST
+    name: Swagger_Petstore_-_OpenAPI_3.0-updatePetWithForm
+    paths:
+    - ~/pet/(?<petId>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - DELETE
+    name: Swagger_Petstore_-_OpenAPI_3.0-deletePet
+    paths:
+    - ~/pet/(?<petId>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - POST
+    name: Swagger_Petstore_-_OpenAPI_3.0-uploadFile
+    paths:
+    - ~/pet/(?<petId>[^/]+)/uploadImage$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-getInventory
+    paths:
+    - ~/store/inventory$
+    plugins:
+    - config:
+        key_names:
+        - api_key
+      name: key-auth
+      tags:
+      - OAS3_import
+      - OAS3file_petstore.yaml
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - POST
+    name: Swagger_Petstore_-_OpenAPI_3.0-placeOrder
+    paths:
+    - ~/store/order$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-getOrderById
+    paths:
+    - ~/store/order/(?<orderId>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - DELETE
+    name: Swagger_Petstore_-_OpenAPI_3.0-deleteOrder
+    paths:
+    - ~/store/order/(?<orderId>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - POST
+    name: Swagger_Petstore_-_OpenAPI_3.0-createUser
+    paths:
+    - ~/user$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - POST
+    name: Swagger_Petstore_-_OpenAPI_3.0-createUsersWithListInput
+    paths:
+    - ~/user/createWithList$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-loginUser
+    paths:
+    - ~/user/login$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-logoutUser
+    paths:
+    - ~/user/logout$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - GET
+    name: Swagger_Petstore_-_OpenAPI_3.0-getUserByName
+    paths:
+    - ~/user/(?<username>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - PUT
+    name: Swagger_Petstore_-_OpenAPI_3.0-updateUser
+    paths:
+    - ~/user/(?<username>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  - methods:
+    - DELETE
+    name: Swagger_Petstore_-_OpenAPI_3.0-deleteUser
+    paths:
+    - ~/user/(?<username>[^/]+)$
+    strip_path: false
+    tags:
+    - OAS3_import
+    - OAS3file_petstore.yaml
+  tags:
+  - OAS3_import
+  - OAS3file_petstore.yaml
