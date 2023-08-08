@@ -24,7 +24,7 @@ pipeline {
     }
     stage('Generate kong.yaml') {
       steps {
-        sh './inso generate config petstore.yaml --type kubernetes -o kong.yaml --kongVersion 3'
+        sh './inso generate config petstore.yaml --type declarative -o kong.yaml'
       }
     }
     stage('Check deck version') {
