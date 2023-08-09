@@ -83,8 +83,6 @@ jobs:
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
           # deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
-           spec=$(cat petstore.yaml)
-           echo "key: $spec" >> MockPlugin.yaml
 
     - name: Append MockingPlugin to new-api.yaml
       run: |
