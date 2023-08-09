@@ -83,42 +83,15 @@ jobs:
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
           # deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
+           spec=$(cat petstore.yaml)
+           echo "key: $spec" >> MockPlugin.yaml
 
     - name: Append MockingPlugin to new-api.yaml
       run: |
-        # Read the specification from petstore.yaml
-        spec=$(cat petstore.yaml)
-        echo "key: $spec" >> MockPlugin.yaml
-    
-        # Append the specification to MockPlugin.yaml
-         # yq eval '.key = strenv(spec)' -i MockingPlugin.yaml
-    
-         # Remove the first line from MockingPlugin.yaml
-         sed -i '1d' MockingPlugin.yaml
-    
-        # Export plugin content from MockingPlugin.yaml
-         export plugin=$(cat MockingPlugin.yaml)
-    
-         # Append the plugin content to new-api.yaml
+          sed -i '1d' MockingPlugin.yaml
+          export plugin=$(cat MockPlugin.yaml)
           cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-    
-        # Append mockplugin.yaml content to new-api.yaml
-        cat mockplugin.yaml >> new-api.yaml
-
-        
-    # - name: Append MockingPlugin to new-api.yaml
-    #   run: |
-    #      spec=$(yq eval '.' petstore.yaml)
-    #      yq eval '.key = env(spec)' -i MockPlugin.yaml
-    #      sed -i '1d' MockingPlugin.yaml
-    #      export plugin=$(cat MockingPlugin.yaml)
-    #      cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-    #      cat mockplugin.yaml >> new-api.yaml
-      # run: |
-      #     sed -i '1d' MockingPlugin.yaml
-      #     export plugin=$(cat MockPlugin.yaml)
-      #     cat MockingPlugin.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-      #     cat mockplugin.yaml >> new-api.yaml
+          cat mockplugin.yaml >> new-api.yaml
     
     - name: check
       run: deck sync -s new-api.yaml --kong-addr http://35.154.219.40:8001
