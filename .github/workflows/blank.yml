@@ -86,6 +86,7 @@ jobs:
     - name: plugin implementation
       run: |
           sed -i '1d' MockingPlugin.yaml
+          export plugin=$(cat MockPlugin.yaml)
           cat MockingPlugin.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
           cat mockplugin.yaml >> new-api.yaml
     
