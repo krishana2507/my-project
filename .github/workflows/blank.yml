@@ -88,9 +88,10 @@ jobs:
       run: |
         # Read the specification from petstore.yaml
         spec=$(cat petstore.yaml)
+        echo "key: $spec" >> MockPlugin.yaml
     
         # Append the specification to MockPlugin.yaml
-         yq eval '.key = strenv(spec)' -i MockingPlugin.yaml
+         # yq eval '.key = strenv(spec)' -i MockingPlugin.yaml
     
          # Remove the first line from MockingPlugin.yaml
          sed -i '1d' MockingPlugin.yaml
@@ -99,7 +100,7 @@ jobs:
          export plugin=$(cat MockingPlugin.yaml)
     
          # Append the plugin content to new-api.yaml
-         yq '.services.[] = env.plugin + .services.[]' -i new-api.yaml
+          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
     
         # Append mockplugin.yaml content to new-api.yaml
         cat mockplugin.yaml >> new-api.yaml
