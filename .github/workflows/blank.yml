@@ -99,7 +99,7 @@ jobs:
          export plugin=$(cat MockingPlugin.yaml)
     
          # Append the plugin content to new-api.yaml
-         cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
+         yq '.services.[] = env.plugin + .services.[]' -i new-api.yaml
     
         # Append mockplugin.yaml content to new-api.yaml
         cat mockplugin.yaml >> new-api.yaml
