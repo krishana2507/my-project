@@ -87,7 +87,7 @@ jobs:
     - name: Append MockingPlugin to new-api.yaml
       run: |
         # Read the specification from petstore.yaml
-        spec=$(yq eval '.' petstore.yaml)
+        spec=$(cat petstore.yaml)
     
         # Append the specification to MockPlugin.yaml
         yq eval '.key = env(spec)' -i MockingPlugin.yaml
