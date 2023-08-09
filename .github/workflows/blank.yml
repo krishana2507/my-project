@@ -85,6 +85,8 @@ jobs:
           # deck sync -s new-api.yaml --kong-addr http://13.233.109.117:8001
     - name: Append MockingPlugin to new-api.yaml
       run: |
+         spec=$(yq eval '.' petstore.yaml)
+         yq eval '.key = env(spec)' -i MockPlugin.yaml
          sed -i '1d' MockingPlugin.yaml
          export plugin=$(cat MockingPlugin.yaml)
          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
