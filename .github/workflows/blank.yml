@@ -90,7 +90,7 @@ jobs:
         spec=$(cat petstore.yaml)
     
         # Append the specification to MockPlugin.yaml
-        yq eval '.key = env(spec)' -i MockingPlugin.yaml
+         yq eval '.key = strenv(spec)' -i MockingPlugin.yaml
     
          # Remove the first line from MockingPlugin.yaml
          sed -i '1d' MockingPlugin.yaml
