@@ -93,10 +93,10 @@ jobs:
           
     - name: Append BasicAuthPlugin to new-api.yaml
       run: |
-       sed -i '1d' basicauthplugin.yaml
-       export plugin=$(cat basicauthplugin.yaml)
-       cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > basic.yaml
-       cat basic.yaml >> new-api.yaml
+          sed -i '1d' basicauthplugin.yaml
+          export plugin=$(cat basicauthplugin.yaml)
+          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > basic.yaml
+          cat basic.yaml >> new-api.yaml
     
     - name: check
       run: deck sync -s new-api.yaml --kong-addr http://35.154.219.40:8001
