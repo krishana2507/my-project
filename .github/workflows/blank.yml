@@ -90,6 +90,13 @@ jobs:
           export plugin=$(cat MockingPlugin.yaml)
           cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
           cat mockplugin.yaml >> new-api.yaml
+          
+    - name: Append BasicAuthPlugin to new-api.yaml
+      run: |
+          sed -i '1d' basicauthplugin.yaml
+          export plugin=$(cat basicauthplugin.yaml)
+          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > basicauth.yaml
+          cat basicauth.yaml >> new-api.yaml
     
     - name: check
       run: deck sync -s new-api.yaml --kong-addr http://35.154.219.40:8001
