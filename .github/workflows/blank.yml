@@ -90,8 +90,8 @@ jobs:
       run: |
           sed -i '1d' basicauthplugin.yaml MockingPlugin.yaml
           export plugin=$(cat basicauthplugin.yaml MockingPlugin.yaml)
-          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > basic.yaml && cp basic.yaml mockplugin.yaml
-          cat basic.yaml mockplugin.yaml >> new-api.yaml
+          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > basic.yaml 
+          cat basic.yaml >> new-api.yaml
           
     - name: Append MockingPlugin to new-api.yaml
       run: |
