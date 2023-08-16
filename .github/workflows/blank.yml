@@ -95,14 +95,15 @@ jobs:
           
     - name: Append MockingPlugin to new-api.yaml
       run: |
-          cat MockingPlugin.yaml
           sed -i '1d' MockingPlugin.yaml
           export plugin=$(cat MockingPlugin.yaml)
           cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
           cat mockplugin.yaml >> new-api.yaml
     
     - name: check
-      run: deck sync -s new-api.yaml --kong-addr http://3.110.210.51:8001
+      run: |
+          cat new-api.yaml
+          deck sync -s new-api.yaml --kong-addr http://3.110.210.51:8001
 
       
     # - name: Commit files
