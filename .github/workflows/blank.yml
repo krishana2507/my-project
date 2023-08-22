@@ -89,7 +89,7 @@ jobs:
     - name: check
       run: |
           cat new-api.yaml
-          deck sync -s new-api.yaml --kong-addr http://3.110.210.51:8001
+          deck sync -s new-api.yaml --kong-addr http://3.110.133.141:8001
 
       
     # - name: Commit files
@@ -143,7 +143,7 @@ jobs:
 
         env:
 
-          KONG_ADMIN_URL: http://35.154.219.40:8001
+          KONG_ADMIN_URL: http://3.110.133.141:8001
   store-yaml-to-postgres:
     name: Store YAML to PostgreSQL
     needs: OAS_TO_Kong
