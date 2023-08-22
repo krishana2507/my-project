@@ -8,7 +8,7 @@ host = "pg-managed.postgres.database.azure.com"
 port = "5432"  # Default PostgreSQL port
 
 # Read the YAML content from the file
-with open("testspec.yaml", "r") as yaml_file:
+with open("petstore.yaml", "r") as yaml_file:
     yaml_content = yaml_file.read()
     print(type(yaml_content))
     # print(yaml_content)
