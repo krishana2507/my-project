@@ -31,9 +31,9 @@ jobs:
  
     - name: Set Environment Variables
       run: |
-          echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
-          echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
 
@@ -114,6 +114,10 @@ jobs:
           if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             echo "Executing Rate Limiting Step"
             # Your rate limiting commands or scripts here
+             sed -i '1d' ratelimmiting.yaml
+             export plugin=$(cat ratelimmiting.yaml)
+             cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > ratelimit.yaml
+            cat ratelimit.yaml >> new-api.yaml
           else
             echo "Rate Limiting Step Skipped"
           fi
