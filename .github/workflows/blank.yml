@@ -28,6 +28,15 @@ jobs:
 
       uses: actions/checkout@v2
 
+ 
+    - name: Set Environment Variables
+      run: |
+          echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
+          echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
+      if: github.ref == 'refs/heads/main' 
+
 
 
 
@@ -78,13 +87,52 @@ jobs:
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
-          
-    - name: Append MockingPlugin to new-api.yaml
+    - name: Mocking Step
       run: |
-          sed -i '1d' MockingPlugin.yaml
-          export plugin=$(cat MockingPlugin.yaml)
-          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-          cat mockplugin.yaml >> new-api.yaml
+          if [[ "${MOCKING_ENABLED}" == "true" ]]; then
+            echo "Executing Mocking Step"
+            # Your mocking commands or scripts here
+            sed -i '1d' MockingPlugin.yaml
+            export plugin=$(cat MockingPlugin.yaml)
+            cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
+            cat mockplugin.yaml >> new-api.yaml
+          else
+            echo "Mocking Step Skipped"
+          fi
+
+    - name: Key Auth Step
+      run: |
+          if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Key Auth Step"
+            # Your key auth commands or scripts here
+          else
+            echo "Key Auth Step Skipped"
+          fi
+
+    - name: Rate Limiting Step
+      run: |
+          if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "Executing Rate Limiting Step"
+            # Your rate limiting commands or scripts here
+          else
+            echo "Rate Limiting Step Skipped"
+          fi
+
+    - name: Basic Auth Step
+      run: |
+          if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Basic Auth Step"
+            # Your basic auth commands or scripts here
+          else
+            echo "Basic Auth Step Skipped"
+          fi
+    
+    # - name: Append MockingPlugin to new-api.yaml
+    #   run: |
+    #       sed -i '1d' MockingPlugin.yaml
+    #       export plugin=$(cat MockingPlugin.yaml)
+    #       cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
+    #       cat mockplugin.yaml >> new-api.yaml
     
     - name: check
       run: |
