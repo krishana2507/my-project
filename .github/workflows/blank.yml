@@ -31,10 +31,10 @@ jobs:
  
     - name: Set Environment Variables
       run: |
-          echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
-          echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
-          echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
+          echo "BASIC_AUTH_ENABLED=true" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
 
 
@@ -177,18 +177,22 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+            cat MockingPlugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            cat ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+            cat keyauth.yaml ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            cat basicauthplugin > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
         fi
