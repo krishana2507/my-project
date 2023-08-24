@@ -100,14 +100,15 @@ jobs:
             echo "Mocking Step Skipped"
           fi
 
-    # - name: Key Auth Step
-    #   run: |
-    #       if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
-    #         echo "Executing Key Auth Step"
-    #         # Your key auth commands or scripts here
-    #       else
-    #         echo "Key Auth Step Skipped"
-    #       fi
+    - name: Key Auth Step
+      run: |
+          if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Key Auth Step"
+            # Your key auth commands or scripts here
+            sed -i '1d' keyauth.yaml
+          else
+            echo "Key Auth Step Skipped"
+          fi
 
     - name: Rate Limiting Step
       run: |
