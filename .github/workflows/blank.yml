@@ -93,12 +93,12 @@ jobs:
             echo "Executing Mocking Step"
             # Your mocking commands or scripts here
             sed -i '1d' MockingPlugin.yaml
-    #         export plugin=$(cat MockingPlugin.yaml)
-    #         cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-    #         cat mockplugin.yaml >> new-api.yaml
-    #       else
-    #         echo "Mocking Step Skipped"
-    #       fi
+            # export plugin=$(cat MockingPlugin.yaml)
+            # cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
+            # cat mockplugin.yaml >> new-api.yaml
+          else
+            echo "Mocking Step Skipped"
+          fi
 
     # - name: Key Auth Step
     #   run: |
@@ -115,12 +115,12 @@ jobs:
             echo "Executing Rate Limiting Step"
             # Your rate limiting commands or scripts here
              sed -i '1d' ratelimmiting.yaml
-    #          export plugin=$(cat ratelimmiting.yaml)
-    #          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > ratelimit.yaml
-    #         cat ratelimit.yaml >> new-api.yaml
-    #       else
-    #         echo "Rate Limiting Step Skipped"
-    #       fi
+            #  export plugin=$(cat ratelimmiting.yaml)
+            #  cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > ratelimit.yaml
+            # cat ratelimit.yaml >> new-api.yaml
+          else
+            echo "Rate Limiting Step Skipped"
+          fi
 
     # - name: Basic Auth Step
     #   run: |
@@ -149,18 +149,10 @@ jobs:
       run: |
        cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
        if [[ "${MOCKING_ENABLED}" == "true" || "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-         # sed -i '1d' combined-plugins.yaml
-         export plugins=$(cat combined-plugins.yaml)
-         cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+        export plugins=$(cat combined-plugins.yaml)
+        cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
        fi
-      
-    
-    # - name: Append MockingPlugin to new-api.yaml
-    #   run: |
-    #       sed -i '1d' MockingPlugin.yaml
-    #       export plugin=$(cat MockingPlugin.yaml)
-    #       cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-    #       cat mockplugin.yaml >> new-api.yaml
+
     
     - name: check
       run: |
