@@ -147,10 +147,10 @@ jobs:
 
     - name: Append Plugins to new-api.yaml
       run: |
-        sed -i '1d' ratelimmiting.yaml
-        cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
-        cat combined-plugins.yaml
         if [[ "${MOCKING_ENABLED}" == "true" || "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+          sed -i '1d' ratelimmiting.yaml
+          cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
+          cat combined-plugins.yaml
           export plugins=$(cat combined-plugins.yaml)
           cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
         fi
