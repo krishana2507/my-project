@@ -161,7 +161,7 @@ jobs:
            sed -i '1d' ratelimmiting.yaml
            sed -i '1d' keyauth.yaml
            sed -i '1d' basicauthplugin.yaml
-           cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
+           cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
            cat combined-plugins.yaml
            export plugins=$(cat combined-plugins.yaml)
            cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
