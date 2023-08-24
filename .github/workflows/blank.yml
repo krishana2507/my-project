@@ -148,7 +148,6 @@ jobs:
     - name: Append Plugins to new-api.yaml
       run: |
        cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
-       cat combined-plugins.yaml
        if [[ "${MOCKING_ENABLED}" == "true" || "${RATE_LIMITING_ENABLED}" == "true" ]]; then
         export plugins=$(cat combined-plugins.yaml)
         cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
@@ -157,7 +156,9 @@ jobs:
     
     - name: check
       run: |
+          cat combined-plugins.yaml
           cat new-api.yaml
+          cat modified-api.yaml
           deck sync -s modified-api.yaml --kong-addr http://65.2.177.94:8001
 
       
