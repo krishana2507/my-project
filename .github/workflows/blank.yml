@@ -142,7 +142,7 @@ jobs:
           if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             sed -i '1d' ratelimmiting.yaml
             export plugin=$(cat ratelimmiting.yaml)
-            cat modified-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > modified-api.yaml
+            cat modified-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > modified-api1.yaml
           fi
     
     # - name: Append MockingPlugin to new-api.yaml
@@ -155,7 +155,7 @@ jobs:
     - name: check
       run: |
           cat new-api.yaml
-          deck sync -s modified-api.yaml --kong-addr http://65.2.177.94:8001
+          deck sync -s modified-api1.yaml --kong-addr http://65.2.177.94:8001
 
       
     # - name: Commit files
