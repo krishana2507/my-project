@@ -163,9 +163,9 @@ jobs:
            cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
            
           elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
-            sed -i '1d' ratelimmiting.yaml
-            echo "print"
+            sed -i '1d' basicauthplugin.yaml 
             cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
+            cat combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
