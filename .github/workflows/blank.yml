@@ -155,7 +155,7 @@ jobs:
     - name: check
       run: |
           cat new-api.yaml
-          deck sync -s modified.yaml --kong-addr http://65.2.177.94:8001
+          deck sync -s modified-api.yaml --kong-addr http://65.2.177.94:8001
 
       
     # - name: Commit files
