@@ -122,14 +122,15 @@ jobs:
             echo "Rate Limiting Step Skipped"
           fi
 
-    # - name: Basic Auth Step
-    #   run: |
-    #       if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
-    #         echo "Executing Basic Auth Step"
-    #         # Your basic auth commands or scripts here
-    #       else
-    #         echo "Basic Auth Step Skipped"
-    #       fi
+    - name: Basic Auth Step
+      run: |
+          if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Basic Auth Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' basicauthplugin.yaml
+          else
+            echo "Basic Auth Step Skipped"
+          fi
           
     # - name: Append Plugins to new-api.yaml
     #   run: |
@@ -160,7 +161,7 @@ jobs:
            cat combined-plugins.yaml
            export plugins=$(cat combined-plugins.yaml)
            cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
-          elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+          elif [[ "${MOCKING_ENABLED}" == "true" || "${RATE_LIMITING_ENABLED}" == "true" || "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             sed -i '1d' basicauthplugin.yaml
             cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
