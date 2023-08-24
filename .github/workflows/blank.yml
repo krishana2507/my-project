@@ -34,7 +34,7 @@ jobs:
           echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
-          echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "BASIC_AUTH_ENABLED=true" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
 
 
@@ -147,15 +147,40 @@ jobs:
 
     - name: Append Plugins to new-api.yaml
       run: |
-        if [[ "${MOCKING_ENABLED}" == "true" || "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-          sed -i '1d' ratelimmiting.yaml
-          cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
-          cat combined-plugins.yaml
-          export plugins=$(cat combined-plugins.yaml)
-          cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+        # if [[ "${MOCKING_ENABLED}" == "true" || "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+        #   sed -i '1d' ratelimmiting.yaml
+        #   cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
+        #   cat combined-plugins.yaml
+        #   export plugins=$(cat combined-plugins.yaml)
+        #   cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+        # fi
+        if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+           sed -i '1d' ratelimmiting.yaml
+           cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
+           cat combined-plugins.yaml
+           export plugins=$(cat combined-plugins.yaml)
+           cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' basicauthplugin.yaml
+            cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
         fi
-
-
     
     - name: check
       run: |
