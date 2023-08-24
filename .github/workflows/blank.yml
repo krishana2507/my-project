@@ -192,7 +192,7 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
-            cat basicauthplugin > combined-plugins.yaml
+            cat basicauthplugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
         fi
