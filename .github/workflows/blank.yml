@@ -87,18 +87,18 @@ jobs:
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
-    - name: Mocking Step
-      run: |
-          if [[ "${MOCKING_ENABLED}" == "true" ]]; then
-            echo "Executing Mocking Step"
-            # Your mocking commands or scripts here
-            sed -i '1d' MockingPlugin.yaml
-            export plugin=$(cat MockingPlugin.yaml)
-            cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-            cat mockplugin.yaml >> new-api.yaml
-          else
-            echo "Mocking Step Skipped"
-          fi
+    # - name: Mocking Step
+    #   run: |
+    #       if [[ "${MOCKING_ENABLED}" == "true" ]]; then
+    #         echo "Executing Mocking Step"
+    #         # Your mocking commands or scripts here
+    #         sed -i '1d' MockingPlugin.yaml
+    #         export plugin=$(cat MockingPlugin.yaml)
+    #         cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
+    #         cat mockplugin.yaml >> new-api.yaml
+    #       else
+    #         echo "Mocking Step Skipped"
+    #       fi
 
     - name: Key Auth Step
       run: |
@@ -109,18 +109,18 @@ jobs:
             echo "Key Auth Step Skipped"
           fi
 
-    - name: Rate Limiting Step
-      run: |
-          if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-            echo "Executing Rate Limiting Step"
-            # Your rate limiting commands or scripts here
-             sed -i '1d' ratelimmiting.yaml
-             export plugin=$(cat ratelimmiting.yaml)
-             cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > ratelimit.yaml
-            cat ratelimit.yaml >> new-api.yaml
-          else
-            echo "Rate Limiting Step Skipped"
-          fi
+    # - name: Rate Limiting Step
+    #   run: |
+    #       if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+    #         echo "Executing Rate Limiting Step"
+    #         # Your rate limiting commands or scripts here
+    #          sed -i '1d' ratelimmiting.yaml
+    #          export plugin=$(cat ratelimmiting.yaml)
+    #          cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > ratelimit.yaml
+    #         cat ratelimit.yaml >> new-api.yaml
+    #       else
+    #         echo "Rate Limiting Step Skipped"
+    #       fi
 
     - name: Basic Auth Step
       run: |
@@ -129,6 +129,20 @@ jobs:
             # Your basic auth commands or scripts here
           else
             echo "Basic Auth Step Skipped"
+          fi
+          
+    - name: Append Plugins to new-api.yaml
+      run: |
+          if [[ "${MOCKING_ENABLED}" == "true" || "${KEY_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' MockingPlugin.yaml
+            export plugin=$(cat MockingPlugin.yaml)
+            cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > modified-api.yaml
+          fi
+
+          if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            sed -i '1d' ratelimmiting.yaml
+            export plugin=$(cat ratelimmiting.yaml)
+            cat modified-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > modified-api.yaml
           fi
     
     # - name: Append MockingPlugin to new-api.yaml
@@ -141,7 +155,7 @@ jobs:
     - name: check
       run: |
           cat new-api.yaml
-          deck sync -s new-api.yaml --kong-addr http://65.2.177.94:8001
+          deck sync -s modified.yaml --kong-addr http://65.2.177.94:8001
 
       
     # - name: Commit files
