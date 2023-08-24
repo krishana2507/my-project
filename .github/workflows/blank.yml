@@ -159,8 +159,8 @@ jobs:
         
         if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
            sed -i '1d' ratelimmiting.yaml
-           sed -i '1d' keyauth.yaml
            sed -i '1d' basicauthplugin.yaml
+           sed -i '1d' keyauth.yaml
            cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
            cat combined-plugins.yaml
            export plugins=$(cat combined-plugins.yaml)
