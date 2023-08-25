@@ -89,6 +89,7 @@ jobs:
 
     - name: Mocking Step
       run: |
+          echo ${{env.MOCKING}}
           if [[ "${MOCKING_ENABLED}" == "true" ]]; then
             echo "Executing Mocking Step"
             # Your mocking commands or scripts here
