@@ -1,0 +1,289 @@
+openapi: 3.0.1
+info:
+  title: Margins calculation service
+  description: Calculates the required margins based on specified parameters for specified accounts
+  contact:
+    name: Menahem Elgavi
+    email: menaheme@tase.co.il
+  version: v1
+servers:
+  - url: https://mocktarget.apigee.net/json
+    description: Development server
+paths:
+  /MarginsCalculator/LCRMReport:
+    post:
+      tags:
+        - MarginsCalculator
+      summary: 'Caculates margin requirement for specifeid members, using specified scneario array parameters.'
+      description: "Scenarios are created: \r\nonce with client netting for each member, for each asset , for each specified fluctuation and scan range<br />\r\nonce with no client netting for for each member, for each asset , for each specified fuctuation and scan range.<br />\r\nexample:<br />\r\nfor member 8110 asset 1, scan range 10 fluctuation 2 and alternate fluctuation 4:<br />\r\n4 scenario arrays for asset 1 will be created:<br />\r\nscan range 10 fluctuation 2 with client netting <br />\r\nscan range 10 fluctuation 4 with client netting <br />\r\nscan range 10 fluctuation 2 without client netting <br />\r\nscan range 10 fluctuation 2 without client netting <br />"
+      operationId: LCRMReport
+      requestBody:
+        description: Acounts and calculation parameters TASE.Margin.API.CalculateRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateRequest'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+        '429':
+          description: Too Many Requests
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /MarginsCalculator/LCRMReportFile:
+    get:
+      tags:
+        - MarginsCalculator
+      operationId: LCRMReportFile
+      parameters:
+        - name: fileName
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    CalculateRequest:
+      required:
+        - date
+        - exportToBI
+      type: object
+      properties:
+        date:
+          minLength: 1
+          type: string
+          description: "The trading date to use for calculation. (yyyy-MM-dd) time is ignored.\r\nThe date implies: \r\n<list type=\"bullet\"><item> underlying assets</item><item> derivatives </item><item> members </item><item> holdings </item></list>"
+        exportToBI:
+          type: boolean
+          description: "Export the results to BI.\r\nSetting this flag to false will keep the results in a local database."
+          default: true
+        memberList:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberParameters'
+          nullable: true
+      additionalProperties: false
+      description: Contains the accounts and parameters for the requested margin calculation.
+    CalculationParameters:
+      required:
+        - assetCode
+        - assetInterestRate
+        - assetValue
+        - fluctuation
+        - interestRate
+        - scenarioParameters
+        - volatility
+      type: object
+      properties:
+        assetCode:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          description: Asset code this parameter list is for
+          format: int32
+        assetValue:
+          minimum: 0.0001
+          type: number
+          description: Asset value to use as base for scenario array
+          format: double
+        volatility:
+          maximum: 256
+          minimum: 0
+          type: integer
+          description: The asset volatility in percentage of asset value. (1 = 1% )
+          format: int32
+        fluctuation:
+          maximum: 256
+          minimum: 0
+          type: integer
+          description: The asset volatility fluctuation in percentage of asset value. (1 = 1% )
+          format: int32
+        assetInterestRate:
+          maximum: 999
+          minimum: -999
+          type: number
+          description: The asset risk free asset intereset rate (1 = 1%)
+          format: double
+        interestRate:
+          maximum: 999
+          minimum: -999
+          type: number
+          description: The risk free intereset rate (1 = 1%)
+          format: double
+        scenarioParameters:
+          maxItems: 1000
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/ScenarioParameters'
+          description: Specify parameters to create more scenario array variants
+      additionalProperties: false
+      description: 'The list of parameters to use in margins requirement calculation, per member and asset.'
+    MemberParameters:
+      required:
+        - calculationParameters
+        - memberNumber
+      type: object
+      properties:
+        memberNumber:
+          maximum: 8999
+          minimum: 8000
+          type: integer
+          description: 'Member number to calculate margins for, using provided parameters'
+          format: int32
+        calculationParameters:
+          maxItems: 100000
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/CalculationParameters'
+          description: The list of members to calculate margins requirement for.
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: { }
+    ScenarioParameters:
+      required:
+        - alternateFluctuation
+        - offsetMode
+        - scanRange
+        - scenarioCode
+      type: object
+      properties:
+        scenarioCode:
+          maximum: 99
+          minimum: 1
+          type: integer
+          description: A code that represents the array created using these parameters
+          format: int32
+        offsetMode:
+          enum:
+            - 1
+            - 2
+          type: integer
+          description: "Specify how to perform client holdings offset.\r\n<list type=\"ClientOffsetTypeEnum\"><item>1 - hybrid</item><item>2 - net</item></list>"
+          format: int32
+        scanRange:
+          maximum: 98
+          minimum: 0
+          type: integer
+          description: The range of the scnearions in percentage of asset value. (1 = 1% )
+          format: int32
+        alternateFluctuation:
+          maximum: 256
+          minimum: 0
+          type: number
+          description: The asset volatility fluctuation in percentage of asset value. (1 = 1% )
+          format: double
+      additionalProperties: false
+      description: Scenario array defining parameters.
+    ValidationProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          nullable: true
+          readOnly: true
+      additionalProperties: { }
+  securitySchemes:
+    basic:
+      type: http
+      description: username password authentication
+      scheme: basic
+security:
+  - basic: [ ]
