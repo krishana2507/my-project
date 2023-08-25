@@ -90,7 +90,7 @@ jobs:
     - name: Mocking Step
       run: |
           echo ${{ vars.MOCKING }}
-          if [[ "${{ vars.MOCKING }}" == "true" ]]; then
+          if [[ "${{ vars.MOCKING }}" == True ]]; then
             echo "Executing Mocking Step"
             # Your mocking commands or scripts here
             sed -i '1d' MockingPlugin.yaml
