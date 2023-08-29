@@ -91,7 +91,7 @@ jobs:
     - name: Setting upstream timeout value
       run: |
         export UT="5000"
-        cat new-kong.yaml | yq '.services.[].connect_timeout |= if . == null then env(UT) else (. + env(UT)) end' -o yaml > new-api.yaml
+        cat new-kong.yaml | yq '.services.[].connect_timeout = (if .services.[].connect_timeout == null then env(UT) else (.services.[].connect_timeout + env(UT)) end)' -o yaml > new-api.yaml
 
     - name: Mocking Step
       run: |
