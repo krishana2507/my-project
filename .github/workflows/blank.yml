@@ -217,8 +217,8 @@ jobs:
       run: |
         export UT="2000"
         # yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
-        yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
-        cat new-api.yaml
+        # yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
+        # cat new-api.yaml
         yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
     
     - name: check
