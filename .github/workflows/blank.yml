@@ -92,6 +92,7 @@ jobs:
       run: |
         export UT="5000"
         yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
+        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
 
         
     - name: Mocking Step
