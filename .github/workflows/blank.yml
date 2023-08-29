@@ -141,12 +141,12 @@ jobs:
 
     - name: request size limiting Step
       run: |
-          if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
-            echo "Executing Basic Auth Step"
+          if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "request size limiting Step"
             # Your basic auth commands or scripts here
-             sed -i '1d' basicauthplugin.yaml
+             sed -i '1d' request-size-limiting.yaml
           else
-            echo "Basic Auth Step Skipped"
+            echo "request size limiting Step Skipped"
           fi
           
     # - name: Append Plugins to new-api.yaml
