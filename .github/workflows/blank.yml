@@ -240,7 +240,6 @@ jobs:
 
           # Clean up temporary files
            rm temp.yaml combined-plugins.yaml
-        fi
             
           # elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
           #   export SizeUnit="bytes"
