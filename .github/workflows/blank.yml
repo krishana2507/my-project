@@ -86,6 +86,10 @@ jobs:
           export w="/default"
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+    - name: Setting upstream timeout value
+      run: |
+         export UT="5000"
+         cat new-kong.yaml | yq '.services.[].connect_timeout = env(UT) + .services.[].connect_timeout' -o yaml > new-api.yaml
 
     - name: Mocking Step
       run: |
