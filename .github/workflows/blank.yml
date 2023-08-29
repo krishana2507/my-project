@@ -89,7 +89,7 @@ jobs:
     - name: Setting upstream timeout value
       run: |
          export UT="5000"
-         yq eval '.services.[].connect_timeout = env(UT) + .services.[].connect_timeout' -i new-kong.yaml
+         yq eval '.services.[].connect_timeout = env(UT) + .services.[].connect_timeout' -i new-api.yaml
 
     - name: Mocking Step
       run: |
