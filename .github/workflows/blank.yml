@@ -35,6 +35,7 @@ jobs:
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
 
 
@@ -129,6 +130,16 @@ jobs:
           fi
 
     - name: Basic Auth Step
+      run: |
+          if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Basic Auth Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' basicauthplugin.yaml
+          else
+            echo "Basic Auth Step Skipped"
+          fi
+
+    - name: request size limiting Step
       run: |
           if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             echo "Executing Basic Auth Step"
