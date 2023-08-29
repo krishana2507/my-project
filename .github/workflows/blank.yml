@@ -92,6 +92,8 @@ jobs:
       run: |
         export UT="5000"
         yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
+
+        
     - name: Mocking Step
       run: |
           echo ${{ vars.MOCKING }}
@@ -216,7 +218,7 @@ jobs:
     
     - name: check
       run: |
-          deck sync -s modified-api.yaml --kong-addr http://65.2.177.94:8001
+          deck sync -s modified-api.yaml --kong-addr http://3.109.143.159:8001
 
       
     # - name: Commit files
