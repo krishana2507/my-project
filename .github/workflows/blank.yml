@@ -222,24 +222,43 @@ jobs:
             cat basicauthplugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-            
-          elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
-            export SizeUnit="bytes"
-            export AllowedPayloadSize="2"
+
+         elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+           export SizeUnit="bytes"
+           export AllowedPayloadSize="2"
+
+          # Update the connect_timeout
             yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
-            cat request-size-limiting.yaml | yq eval '.services.[].SizeUnit.AllowedPayloadSize |= env(SizeUnit)+env(AllowedPayloadSize)' -o yaml> combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+          # Update the SizeUnit and AllowedPayloadSize in request-size-limiting.yaml
+           cat request-size-limiting.yaml | yq eval '.services.[].SizeUnit = env(SizeUnit)' -y - > temp.yaml
+           cat temp.yaml | yq eval '.services.[].AllowedPayloadSize = env(AllowedPayloadSize)' -y - > combined-plugins.yaml
+
+          # Combine the modified request-size-limiting.yaml with new-api.yaml
+          export plugins=$(cat combined-plugins.yaml)
+          cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+          # Clean up temporary files
+           rm temp.yaml combined-plugins.yaml
+        fi
+            
+          # elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+          #   export SizeUnit="bytes"
+          #   export AllowedPayloadSize="2"
+          #   yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+          #   cat request-size-limiting.yaml | yq eval '.services.[].SizeUnit.AllowedPayloadSize |= env(SizeUnit)+env(AllowedPayloadSize)' -o yaml> combined-plugins.yaml
+          #   export plugins=$(cat combined-plugins.yaml)
+          #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
          
         fi
 
-    - name: Setting upstream timeout value
-      run: |
-        export UT="2000"
-        # yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
-        # yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
-        # cat new-api.yaml
-        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+    # - name: Setting upstream timeout value
+    #   run: |
+    #     export UT="2000"
+    #     # yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
+    #     # yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
+    #     # cat new-api.yaml
+    #     yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
     
     - name: check
       run: |
