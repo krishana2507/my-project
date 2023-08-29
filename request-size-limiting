@@ -1,0 +1,13 @@
+_format_version: "3.0"
+plugins:
+- config:
+    allowed_payload_size: 128
+    require_content_length: false
+    size_unit: megabytes
+  enabled: true
+  name: request-size-limiting
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
