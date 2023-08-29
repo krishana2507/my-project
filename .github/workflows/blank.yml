@@ -88,11 +88,7 @@ jobs:
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
           
-    - name: Setting upstream timeout value
-      run: |
-        export UT="5000"
-        yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
-        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+   
 
         
     - name: Mocking Step
@@ -216,6 +212,12 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
         fi
+
+    - name: Setting upstream timeout value
+      run: |
+        export UT="5000"
+        yq eval '.services.[].connect_timeout |= (.//0 + env(UT))' new-api.yaml -i
+        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
     
     - name: check
       run: |
