@@ -243,6 +243,7 @@ jobs:
     
     - name: check
       run: |
+          cat modified-api.yaml
           deck sync -s modified-api.yaml --kong-addr http://3.109.143.159:8001
 
       
