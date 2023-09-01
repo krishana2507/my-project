@@ -224,6 +224,7 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "Hieee"
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
             cat request-size-limiting.yaml | yq eval '.plugins[].config[].SizeUnit = env(SizeUnit)' -o yaml
