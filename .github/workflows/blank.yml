@@ -227,7 +227,7 @@ jobs:
             echo "Hieee"
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
-            cat request-size-limiting.yaml | yq eval '.plugins[].config[].SizeUnit = env(SizeUnit)' -o yaml > new-request-size-limit.yaml
+            cat request-size-limiting.yaml | yq eval '.plugins.[].config.[].SizeUnit = env(SizeUnit)' -o yaml > new-request-size-limit.yaml
             cat new-request-size-limit.yaml
             cat request-size-limiting.yaml | yq eval '.services.[].SizeUnit.AllowedPayloadSize |= env(SizeUnit)+env(AllowedPayloadSize)' -o yaml> combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
