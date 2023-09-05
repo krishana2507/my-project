@@ -235,7 +235,7 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
          elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
-            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+            export config.api_spec="petstore.yaml"
             yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
             cat oas-validation.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
