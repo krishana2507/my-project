@@ -212,8 +212,8 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
-            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
-            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' MockingPlugin.yaml -i
+            export api_specification="${{ env.OAS_SPEC_FILE }}"
+            yq eval '.plugins.[].api_specification |= env(api_specification)' MockingPlugin.yaml -i
             cat MockingPlugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
@@ -233,12 +233,12 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
-         elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
-            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
-            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
-            cat oas-validation.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+         # elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+         #    export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+         #    yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
+         #    cat oas-validation.yaml > combined-plugins.yaml
+         #    export plugins=$(cat combined-plugins.yaml)
+         #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
             export SizeUnit="bytes"
