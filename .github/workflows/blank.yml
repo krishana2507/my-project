@@ -213,7 +213,7 @@ jobs:
             
           elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
             export APISpecification="$(cat $OAS_SPEC_FILE)"
-            api_specification=\"${APISpecification}\"
+            APISpecification=\"${APISpecification}\"
             echo $APISpecification
             yq eval '.plugins.[].config.api_specification |= env(APISpecification)' MockingPlugin.yaml -i
             cat MockingPlugin.yaml > combined-plugins.yaml
