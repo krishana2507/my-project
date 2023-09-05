@@ -215,7 +215,7 @@ jobs:
             export api_specification="$(cat $OAS_SPEC_FILE)"
             api_specification=\"{api_specification}\"
             echo $api_specification
-            yq eval '.plugins.[].config.api_specification |= " + env(api_specification) + "' MockingPlugin.yaml -i
+            yq eval '.plugins.[].config.api_specification |= "env(api_specification)' MockingPlugin.yaml -i
             cat MockingPlugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
