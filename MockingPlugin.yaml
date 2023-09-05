@@ -1,7 +1,7 @@
 _format_version: "3.0"
 plugins:
 - config:
-    api_specification: ""
+    api_specification: " "
     api_specification_filename: null
     included_status_codes: null
     max_delay_time: 1
