@@ -100,9 +100,6 @@ jobs:
             echo "Executing Mocking Step"
             # Your mocking commands or scripts here
             sed -i '1d' MockingPlugin.yaml
-            # export plugin=$(cat MockingPlugin.yaml)
-            # cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > mockplugin.yaml
-            # cat mockplugin.yaml >> new-api.yaml
           else
             echo "Mocking Step Skipped"
           fi
@@ -215,6 +212,8 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' MockingPlugin.yaml -i
             cat MockingPlugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
