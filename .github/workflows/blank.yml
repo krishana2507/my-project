@@ -155,7 +155,7 @@ jobs:
           if [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
             echo "request size limiting Step"
             # Your basic auth commands or scripts here
-             sed -i '1d'oas-validation.yaml
+             sed -i '1d' oas-validation.yaml
           else
             echo "oas validation Step Skipped"
           fi
