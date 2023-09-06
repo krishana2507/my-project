@@ -106,7 +106,7 @@ jobs:
 
     - name: Key Auth Step
       run: |
-          if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+          if [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
             echo "Executing Key Auth Step"
             # Your key auth commands or scripts here
             sed -i '1d' keyauth.yaml
