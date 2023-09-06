@@ -35,7 +35,7 @@ jobs:
           # echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
-          echo "REQUEST_SIZE_LIMITING_ENABLED=false" >> $GITHUB_ENV
+          echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
@@ -250,13 +250,15 @@ jobs:
          #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
-            export SizeUnit="bytes"
-            export AllowedPayloadSize="2"
-            yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
-             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
-            cat request-size-limiting.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            # export SizeUnit="bytes"
+            # export AllowedPayloadSize="2"
+            # yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
+            #  yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
+              yq eval ".plugins.[].config.size_unit.[] |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+              yq eval ".plugins.[].config.allowed_payload_size.[] |= \"${{vars.ALLOWEDPAYLOADSIZE}}\"" request-size-limiting.yaml -i
+              cat request-size-limiting.yaml > combined-plugins.yaml
+              export plugins=$(cat combined-plugins.yaml)
+              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
          
         fi
 
