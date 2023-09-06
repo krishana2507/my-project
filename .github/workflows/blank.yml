@@ -135,7 +135,7 @@ jobs:
              sed -i '1d' basicauthplugin.yaml
           else
             echo "Basic Auth Step Skipped"
-          fi
+          fi 
 
     - name: request size limiting Step
       run: |
