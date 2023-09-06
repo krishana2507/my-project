@@ -229,10 +229,12 @@ jobs:
             # export apikey="krishna"
             # yq eval '.plugins.[].config.key_names.[] |= env(apikey)' keyauth.yaml -i
             # yq eval '.plugins.[].config.key_names.[] |= ${{ vars.KONGKEYNAME }}' keyauth.yaml -i
-            yq eval '.plugins.[].config.key_names.[] |= env(KONGKEYNAME)' keyauth.yaml -i
-            cat keyauth.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+             KONGKEYNAME_DOUBLE_QUOTED="\"${KONGKEYNAME}\""
+             yq eval '.plugins.[].config.key_names.[] |= ${{ vars.KONGKEYNAME }}' keyauth.yaml -i
+             yq eval '.plugins.[].config.key_names.[] |= env(KONGKEYNAME_DOUBLE_QUOTED)' keyauth.yaml -i
+             cat keyauth.yaml > combined-plugins.yaml
+             export plugins=$(cat combined-plugins.yaml)
+             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             cat basicauthplugin.yaml > combined-plugins.yaml
