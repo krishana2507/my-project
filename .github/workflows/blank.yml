@@ -31,8 +31,8 @@ jobs:
  
     - name: Set Environment Variables
       run: |
-          echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
-          echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=false" >> $GITHUB_ENV
@@ -211,14 +211,14 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-          elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
-            export APISpecification="$(cat $OAS_SPEC_FILE)"
-            APISpecification=\"${APISpecification}\"
-            echo $APISpecification
-            yq eval '.plugins.[].config.api_specification |= env(APISpecification)' MockingPlugin.yaml -i
-            cat MockingPlugin.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          # elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+          #   export APISpecification="$(cat $OAS_SPEC_FILE)"
+          #   APISpecification=\"${APISpecification}\"
+          #   echo $APISpecification
+          #   yq eval '.plugins.[].config.api_specification |= env(APISpecification)' MockingPlugin.yaml -i
+          #   cat MockingPlugin.yaml > combined-plugins.yaml
+          #   export plugins=$(cat combined-plugins.yaml)
+          #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             cat ratelimmiting.yaml > combined-plugins.yaml
@@ -226,7 +226,9 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
-            cat keyauth.yaml ratelimmiting.yaml > combined-plugins.yaml
+            export apikey="krishna"
+            yq eval '.plugins.[].config.key_names |= env(apikey)' keyauth.yaml -i
+            cat keyauth.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
