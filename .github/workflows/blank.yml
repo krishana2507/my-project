@@ -106,7 +106,7 @@ jobs:
 
     - name: Key Auth Step
       run: |
-          if [[ "${{ vars.KEY_AUTH_ENABLED }}" == False ]]; then
+          if [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
             echo "Executing Key Auth Step"
             # Your key auth commands or scripts here
             sed -i '1d' keyauth.yaml
@@ -209,11 +209,11 @@ jobs:
           #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           # elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
-            # elif [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
-            #  yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
-            #  cat keyauth.yaml > combined-plugins.yaml
-            #  export plugins=$(cat combined-plugins.yaml)
-            #  cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            elif [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
+             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+             cat keyauth.yaml > combined-plugins.yaml
+             export plugins=$(cat combined-plugins.yaml)
+             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           # elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
           #   cat basicauthplugin.yaml > combined-plugins.yaml
