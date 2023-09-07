@@ -200,7 +200,8 @@ jobs:
             cat MockingPlugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-      
+            cat modified-api.yaml
+         
             
           # elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
           #   cat ratelimmiting.yaml > combined-plugins.yaml
