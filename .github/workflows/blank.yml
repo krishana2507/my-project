@@ -31,7 +31,7 @@ jobs:
  
     - name: Set Environment Variables
       run: |
-          echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           # echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
@@ -211,7 +211,7 @@ jobs:
           #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
             elif [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
-             yq eval '.plugins.[].config.key_names.[] |= ${{vars.KONGKEYNAME}}' keyauth.yaml -i
+             yq eval '.plugins.[].config.key_names.[] |= ${{ vars.KONGKEYNAME }}' keyauth.yaml -i
              cat keyauth.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
