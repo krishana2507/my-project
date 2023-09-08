@@ -211,7 +211,7 @@ jobs:
           #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
             elif [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
-             yq eval '.plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"' keyauth.yaml -i
+             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
              cat keyauth.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
