@@ -198,7 +198,7 @@ jobs:
             export APISpecification="$(cat $a)"
             echo $APISpecification
             # APISpecification=\"${APISpecification}\
-            yq eval '.plugins.[].config.api_specification |= env(APISpecification)' MockingPlugin.yaml -i
+            yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
             cat MockingPlugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
