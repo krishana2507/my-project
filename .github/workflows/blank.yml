@@ -36,7 +36,7 @@ jobs:
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
-          echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
+          echo "OAS_VALIDATION_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
 
@@ -220,12 +220,12 @@ jobs:
           #   export plugins=$(cat combined-plugins.yaml)
           #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
-         # elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
-         #    export config.api_spec="${{ env.OAS_SPEC_FILE }}"
-         #    yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
-         #    cat oas-validation.yaml > combined-plugins.yaml
-         #    export plugins=$(cat combined-plugins.yaml)
-         #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+         elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
+            cat oas-validation.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
               yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
