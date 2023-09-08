@@ -194,7 +194,7 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
-            export APISpecification="$(cat $OAS_SPEC_FILE)"
+            export APISpecification="$(cat${{ vars.OAS_SPEC_FILE }})"
             # APISpecification=\"${APISpecification}\
             yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
             cat MockingPlugin.yaml > combined-plugins.yaml
