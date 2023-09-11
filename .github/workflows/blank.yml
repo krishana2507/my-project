@@ -256,9 +256,6 @@ jobs:
               export plugins=$(cat combined-plugins.yaml)
               cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
-        elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
-   
-         
         fi
 
     - name: Setting upstream timeout value
