@@ -160,8 +160,8 @@ jobs:
        echo "weroliejfwoqkplkdfshkjd"
        
        # sed -i '1d' ratelimmiting.yaml
-       cat ratelimmiting.yaml >> combined-plugins.yaml
-       echo "rate"
+       # cat ratelimmiting.yaml >> combined-plugins.yaml
+       # echo "rate"
        
        yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
        sed -i '1d' keyauth.yaml
@@ -173,17 +173,16 @@ jobs:
        sed -i '1d' request-size-limiting.yaml
        cat request-size-limiting.yaml >> combined-plugins.yaml
        echo "request"
-       
-       # sed -i '1d' ratelimmiting.yaml
-       # cat ratelimmiting.yaml >> combined-plugins.yaml
               
        export plugins=$(cat combined-plugins.yaml)
        cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-         
-       elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-        cat ratelimmiting.yaml >> combined-plugins.yaml
-        export plugins=$(cat combined-plugins.yaml)
-        cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+          
+       # elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+       #  cat ratelimmiting.yaml >> combined-plugins.yaml
+       #  export plugins=$(cat combined-plugins.yaml)
+       #  cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+      
        fi
    
 
