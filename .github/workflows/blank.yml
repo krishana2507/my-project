@@ -106,7 +106,7 @@ jobs:
 
     - name: Key Auth Step
       run: |
-          if [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
+          if [[ "${KEY_AUTH_ENABLED}" == true ]]; then
             echo "Executing Key Auth Step"
             # Your key auth commands or scripts here
             sed -i '1d' keyauth.yaml
@@ -212,7 +212,7 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             cat modified-api.yaml
 
-          elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{KEY_AUTH_ENABLED}}" == true ]]; then
+          elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == true ]]; then
             echo weroliejfwoqkplkdfshkjd
             
             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
@@ -233,7 +233,7 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-            elif [[ "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
+            elif [[ "${KEY_AUTH_ENABLED}" == True ]]; then
              yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
              cat keyauth.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
