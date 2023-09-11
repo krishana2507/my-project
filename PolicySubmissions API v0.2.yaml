@@ -1,0 +1,533 @@
+---
+openapi: 3.0.0
+info:
+  title: Policy API
+  description: This API is used to create or update Poicy submissions to HX renew.
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/layerreference/submissions/
+  description: SwaggerHub API Auto Mocking
+paths:
+  /policies:
+    post:
+      tags:
+      - create
+      summary: creates a new Policy and PolicyOption
+      description: creates a new Policy and PolicyOption 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createPolicyRequest'
+      responses:
+        "200":
+          description: Submission is successfully submitted
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseModel'
+        "400":
+          description: Bad Request - Please check if paramters are valid and request is corect syntax
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_responseModel'
+        "401":
+          description: Unauthorized - authorization has been refused
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401_responseModel'
+      
+        "403":
+          description: Forbidden - Please check credentials and try again
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403_responseModel'
+        "500":
+          description: Internal Server Error - Please retry
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500_responseModel'
+  /policies/{policy_id}/options:   
+    post:
+      tags:
+      - update policy with policy options
+      summary: updates a new Policy and PolicyOption
+      parameters:
+        - in: path
+          name: policy_id
+          schema:
+            type: number
+          required: true
+          description: Numeric ID of the user to get
+      description: creates a new policy option
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createPolicyOptionRequest'
+      responses:
+        "200":
+          description: Submission is successfully submitted
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseModel'
+        "400":
+          description: Bad Request - Please check if paramters are valid and request is corect syntax
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_responseModel'
+        "401":
+          description: Unauthorized - authorization has been refused
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401_responseModel'
+      
+        "403":
+          description: Forbidden - Please check credentials and try again
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403_responseModel'
+        "500":
+          description: Internal Server Error - Please retry
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500_responseModel'
+components:
+  schemas:
+    successResponseModel:
+      required:
+      - code
+      - description
+      - message
+      - source
+      - type
+      type: object
+      properties:
+        id:
+          type: number
+          description: policyId
+          example: 123
+        
+        customer_id:
+          type: string
+          description: option id
+          example: optionID
+        primary_policy_option_id:
+          type: string
+          description: option id
+          example: optionID
+        layerNumber:
+          type: string
+          description: layerNumber
+          example: Prebind Model Created
+        modellingLayerRef:
+          type: string
+          description: modelling layer ref
+          example: 
+        limitCurrency:
+          type: string
+          description: currency
+          example: GBP
+        occurenceLimit:
+          type: string
+          description: Occurence limit
+          example: 
+        occurenceAttachmentPoint:
+          type: string
+          description: occurrence attachment point
+          example: 
+        aggregateLimit:
+          type: string
+          description: aggregate limit
+          example: 
+        aggregateAttachmentPoint:
+          type: string
+          description: aggregate attachment point
+          example: 
+        riskLimit:
+          type: string
+          description: risk limit
+          example: 
+        riskAttachmentPoint:
+          type: string
+          description: risk attachment point
+          example: 
+        orderPercentage:
+          type: string
+          description: order percentage
+          example: 
+        ofOrderWholePercentage:
+          type: string
+          description: ofOrder whole percentage
+          example:
+        reinstatementPremiumPercentage:  
+          type: string
+          description: reinstatementPremiumPercentage
+          example: 
+        reinstatementPremium2Percentage:
+          type: string
+          description: reinstatementPremium2Percentage
+          example: 
+        cascading:
+          type: string
+          description: cascading
+          example: 
+        layerStatus:
+          type: string
+          description: layerStatus
+          example: 
+    responseModel:
+      required:
+      - code
+      - description
+      - message
+      - source
+      - type
+      type: object
+      properties:
+        code:
+          type: number
+          description: 5 digit Convex message code
+          example: 10005
+          enum:
+          - 10005
+        description:
+          type: string
+          description: Description for the 5 digit convex message code. 10000 - Unauthorized Request
+          example: Unauthorized Request
+        source:
+          type: string
+          description: Source of the message
+          example: backend
+          enum:
+          - Backend
+          - Middleware
+      
+        message:
+          type: string
+          description: Any message for the consuming system for use in UI or in the application
+        type:
+          type: string
+          description: Type of the message
+          example: Validation
+          enum:
+          - System
+          - Business
+          - Validation
+    400_responseModel:
+      required:
+      - code
+      - description
+      - message
+      - source
+      - type
+      type: object
+      properties:
+        code:
+          type: number
+          description: 5 digit Convex message code
+          example: 10000
+          enum:
+          - 10000
+        description:
+          type: string
+          description: Description for the 5 digit convex message code. 10000 - Required fields are missing or invalid data specified in the request. Please refer the swagger specification for more details
+          example: Required fields are missing or invalid data specified in the request. Please refer the swagger specification for more details
+        source:
+          type: string
+          description: Source of the message
+          example: Middleware
+          enum:
+          - Backend
+          - Middleware
+      
+        message:
+          type: string
+          description: Any message for the consuming system for use in UI or in the application
+          example: Invalid JSON
+        type:
+          type: string
+          description: Type of the message
+          example: Validation
+          enum:
+          - System
+          - Business
+          - Validation
+    500_responseModel:
+      required:
+      - code
+      - description
+      - message
+      - source
+      - type
+      type: object
+      properties:
+        code:
+          type: number
+          description: 5 digit Convex message code
+          example: 20000
+          enum:
+          - 20000
+        description:
+          type: string
+          description: Description for the 5 digit convex message code. 20000 - Internal Server Error
+          example: Internal Server Error
+        source:
+          type: string
+          description: Source of the message
+          example: backend
+          enum:
+          - Backend
+          - Middleware
+      
+        message:
+          type: string
+          description: Any message for the consuming system for use in UI or in the application
+        type:
+          type: string
+          description: Type of the message
+          example: System
+          enum:
+          - System
+          - Business
+          - Validation
+    403_responseModel:
+      required:
+      - message
+      - http_status_code
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any message for the consuming system for use in UI or in the application
+          example: API Key is not valid or is expired / revoked.
+        http_status_code:
+          type: string
+          description: http response code
+          example: 403
+    401_responseModel:
+      required:
+      - message
+      - http_status_code
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any message for the consuming system for use in UI or in the application
+          example: Unauthorized - Expired Token.
+        http_status_code:
+          type: string
+          description: http response code
+          example: 401
+    createPolicyRequest:
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/policyModel'
+    createPolicyOptionRequest:
+      type: object
+      properties:
+        policyOption:
+          $ref: '#/components/schemas/policyOption'
+    policyModel:
+      type: object
+      properties:
+        name:
+          type: string  
+          description: name of the policy
+          example: SureChoice - Prop Cat US - 2022
+        model_version_id:
+          type: number  
+          description: Model Version ID to create a new Policy from
+          example: SureChoice - Prop Cat US - 2022
+        description:
+          type: string  
+          description: name of the policy
+          example: SureChoice - Prop Cat US - 2022
+        live:
+          type: boolean  
+          description: A Boolean that indicates whether the Policy is a Live or Test Policy 
+          example: true
+        customer_id:
+          type: string  
+          description: name of the policy
+          example: New policy
+        responsible_user_id:
+          type: string  
+          description: LRS team
+          example: LRS
+        secondary_calculation_main_policy_id:
+          type: number  
+          description: LRS team
+          example: LRS
+        secondary_calculation_main_customer_policy_id:
+          type: number  
+          description: LRS team
+          example: LRS
+        secondary_calculation_reason:
+          type: string  
+          description: LRS team
+          enum: ["MTA","RATE_CHANGE", "SUB_MODULE"]
+          example: LRS
+        tags:
+          type: string  
+          description: LRS team
+          example: LRS
+        expiring_pas_references:
+          type: string  
+          description: previous convex policy reference 
+          example: LRS
+        role:
+          $ref: '#/components/schemas/role'
+        pas_references:
+          type: string
+          description: convex policy references
+          example: policyRef
+        initialOption:
+          $ref: '#/components/schemas/policyOption'
+     
+    policyOption:
+      type: object
+      properties:
+        name:
+          type: string  
+          description: summary of the modelling task
+          example: Pre-Bind RI Modelling
+        customer_id:
+          type: string  
+          description: name of the policy
+          example: New policy
+        description:
+          type: string  
+          description: name of the policy
+          example: SureChoice - Prop Cat US - 2022
+        inception_date:
+          type: string
+          format: date
+          description: inception date 
+          example: 2023-01-01
+        expiry_date:
+          type: string
+          format: date
+          description: expiry date of the subbmision
+          example: 2023-01-01
+    role:
+      type: object
+      description: The role you want to use to create the Policy. Must be provided in either the body (here) or the header.
+      required:
+        - team
+    
+      properties:
+        
+        team:
+          type: string  
+          description: LRS team
+          example: LRS
+
+        role:
+          type: string  
+          description: Role
+          example: Modeller
+
+  responses:
+    "400_Error_BadRequest":
+      description: Bad Request - Please check if paramters are valid and request is corect syntax
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/400_responseModel'
+    "401_Error_Unauthorized":
+      description: Unauthorized - authorization has been refused
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/401_responseModel'
+    "403_Error_Forbidden":
+      description: Forbidden - Please check credentials and try again
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/403_responseModel'
+    "404_Error_NotFound":
+      description: Not Found - A record with the specified ID was not found.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/responseModel'
+    "500_Error_InternalServerError":
+      description: Internal Server Error - Please retry
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/responseModel'
+    "200_Sucess":
+      description: Submission is successfully submitted
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/responseModel'
+  headers:
+    X-Request-Id:
+      description: Unique identifier of REST API request without relation to the business function.
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: rw1ty46ens-6c54-4b01-90e6-d701748f0851
