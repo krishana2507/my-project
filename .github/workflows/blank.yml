@@ -165,19 +165,19 @@ jobs:
     - name: Append Plugins to new-api.yaml
       run: |
         if [[ "${MOCKING_ENABLED}" == "false" && "${RATE_LIMITING_ENABLED}" == "false" && "${KEY_AUTH_ENABLED}" == "false" && "${BASIC_AUTH_ENABLED}" == "false" ]]; then
-           # sed -i '1d' ratelimmiting.yaml
-           # sed -i '1d' basicauthplugin.yaml
-           # sed -i '1d' keyauth.yaml
-           # yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
-           # export a="${{ vars.OAS_SPEC_FILE }}"
-           # export APISpecification="$(cat $a)"
-           # echo $APISpecification
-           # # APISpecification=\"${APISpecification}\
-           # yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
-           # cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
-           # cat combined-plugins.yaml
-           # export plugins=$(cat combined-plugins.yaml)
-           # cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+           sed -i '1d' ratelimmiting.yaml
+           sed -i '1d' basicauthplugin.yaml
+           sed -i '1d' keyauth.yaml
+           yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+           export a="${{ vars.OAS_SPEC_FILE }}"
+           export APISpecification="$(cat $a)"
+           echo $APISpecification
+           # APISpecification=\"${APISpecification}\
+           yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
+           cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
+           cat combined-plugins.yaml
+           export plugins=$(cat combined-plugins.yaml)
+           cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
            
           elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             sed -i '1d' ratelimmiting.yaml
