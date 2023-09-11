@@ -211,8 +211,20 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             cat modified-api.yaml
-         
+
+          elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
+            yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+            cat keyauth.yaml > combined-plugins.yaml
             
+            yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+            yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+            cat request-size-limiting.yaml > combined-plugins.yaml
+            
+            cat ratelimmiting.yaml > combined-plugins.yaml
+              
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+             
           elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             
             cat ratelimmiting.yaml > combined-plugins.yaml
@@ -243,6 +255,9 @@ jobs:
               cat request-size-limiting.yaml > combined-plugins.yaml
               export plugins=$(cat combined-plugins.yaml)
               cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+        elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
+   
          
         fi
 
