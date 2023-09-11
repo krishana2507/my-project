@@ -33,7 +33,7 @@ jobs:
       run: |
           echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
           # echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
-          echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=true" >> $GITHUB_ENV
