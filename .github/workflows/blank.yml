@@ -182,7 +182,7 @@ jobs:
 
         echo ratelimiting
       
-        cat ratelimmiting.yaml request-size-limiting keyauth.yaml > combined-plugins.yaml  
+        cat ratelimmiting.yaml request-size-limiting.yaml keyauth.yaml > combined-plugins.yaml  
         
         export plugins=$(cat combined-plugins.yaml)
         echo $plugins
