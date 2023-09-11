@@ -31,7 +31,7 @@ jobs:
  
     - name: Set Environment Variables
       run: |
-          # echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           # echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
@@ -213,6 +213,8 @@ jobs:
             cat modified-api.yaml
 
           elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{ vars.KEY_AUTH_ENABLED }}" == True ]]; then
+            echo we;roliejfwoqkplkdfshkjd
+            
             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
             cat keyauth.yaml > combined-plugins.yaml
             
