@@ -164,19 +164,19 @@ jobs:
 
     - name: Append Plugins to new-api.yaml
       run: |
-         echo weroliejfwoqkplkdfshkjd
+        echo weroliejfwoqkplkdfshkjd
             
-         yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
-         cat keyauth.yaml > combined-plugins.yaml
+        yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+        cat keyauth.yaml > combined-plugins.yaml
             
-         yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
-         yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
-         cat request-size-limiting.yaml > combined-plugins.yaml
+        yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+        yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+        cat request-size-limiting.yaml > combined-plugins.yaml
             
-         cat ratelimmiting.yaml > combined-plugins.yaml
+        cat ratelimmiting.yaml > combined-plugins.yaml
               
-         export plugins=$(cat combined-plugins.yaml)
-         cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+        export plugins=$(cat combined-plugins.yaml)
+        cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
              
       
         if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
