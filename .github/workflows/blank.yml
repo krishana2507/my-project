@@ -164,7 +164,7 @@ jobs:
        # echo "rate"
        
        yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
-       sed -i '1d' keyauth.yaml
+       # sed -i '1d' keyauth.yaml
        # cat keyauth.yaml >> combined-plugins.yaml
        echo "key"
        
