@@ -212,7 +212,7 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             cat modified-api.yaml
 
-          elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{KEY_AUTH_ENABLED }}" == true ]]; then
+          elif [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${{KEY_AUTH_ENABLED}}" == true ]]; then
             echo weroliejfwoqkplkdfshkjd
             
             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
