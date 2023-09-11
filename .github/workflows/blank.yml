@@ -175,9 +175,13 @@ jobs:
         yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
         yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
         cat request-size-limiting.yaml > combined-plugins.yaml
+        
+        echo req
             
         cat ratelimmiting.yaml > combined-plugins.yaml
-              
+
+        echo ratelimiting
+        
         export plugins=$(cat combined-plugins.yaml)
         cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
              
