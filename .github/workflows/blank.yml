@@ -167,6 +167,9 @@ jobs:
         echo weroliejfwoqkplkdfshkjd
             
         yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+        
+        echo keyauth
+        
         cat keyauth.yaml > combined-plugins.yaml
             
         yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
