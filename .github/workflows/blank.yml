@@ -158,15 +158,16 @@ jobs:
       run: |
        if [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" ]]; then
        echo "weroliejfwoqkplkdfshkjd"
-       sed -i '1d' keyauth.yaml
+       # sed -i '1d' keyauth.yaml
     
        yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
        cat keyauth.yaml > combined-plugins.yaml
     
        yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
        yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+       sed -i '1d' request-size-limiting.yaml
        cat request-size-limiting.yaml >> combined-plugins.yaml
-    
+       sed -i '1d' ratelimmiting.yaml
        cat ratelimmiting.yaml >> combined-plugins.yaml
               
        export plugins=$(cat combined-plugins.yaml)
