@@ -181,8 +181,9 @@ jobs:
         cat  keyauth.yaml request-size-limiting.yaml ratelimmiting.yaml >> combined-plugins.yaml  
         
         export plugins=$(cat combined-plugins.yaml)
-        echo $plugins
-        echo plugins printed
+        cat combined-plugins.yaml
+        
+        echo combined plugins file printed
         
         cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
              
