@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: NAMyServiceAPIApigee
+  title: NAMyServiceAPIkong
   version: 1.0.0
 servers:
   - url: https://httpbin.org
