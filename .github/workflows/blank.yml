@@ -164,7 +164,7 @@ jobs:
 
     - name: Append Plugins to new-api.yaml
       run: |
-        if [[ "${MOCKING_ENABLED}" == "false" && "${RATE_LIMITING_ENABLED}" == "false" && "${KEY_AUTH_ENABLED}" == "false" && "${BASIC_AUTH_ENABLED}" == "false" ]]; then
+        if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
            sed -i '1d' ratelimmiting.yaml
            sed -i '1d' basicauthplugin.yaml
            sed -i '1d' keyauth.yaml
@@ -199,7 +199,8 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-          elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+          # elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+          elif [[ "${{ vars.Mocking }}" == True ]]; then
             export a="${{ vars.OAS_SPEC_FILE }}"
             export APISpecification="$(cat $a)"
             echo $APISpecification
