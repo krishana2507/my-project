@@ -176,9 +176,9 @@ jobs:
         sed -i '1d' request-size-limiting.yaml
      
         echo ratelimiting
-        #sed -i '1d' ratelimmiting.yaml
+        sed -i '1d' ratelimmiting.yaml
       
-        cat  keyauth.yaml request-size-limiting.yaml ratelimmiting.yaml >> combined-plugins.yaml  
+        cat  keyauth.yaml request-size-limiting.yaml ratelimmiting.yaml > combined-plugins.yaml  
         
         export plugins=$(cat combined-plugins.yaml)
         cat combined-plugins.yaml
