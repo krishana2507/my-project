@@ -31,7 +31,7 @@ jobs:
  
     - name: Set Environment Variables
       run: |
-          echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
+          # echo "MOCKING_ENABLED=true" >> $GITHUB_ENV
           # echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
@@ -233,9 +233,8 @@ jobs:
          #    cat oas-validation.yaml > combined-plugins.yaml
          #    export plugins=$(cat combined-plugins.yaml)
          #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-        fi
             
-        if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+        elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
               yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
               yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
               cat request-size-limiting.yaml > combined-plugins.yaml
