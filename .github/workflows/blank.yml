@@ -165,15 +165,17 @@ jobs:
        
        yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
        sed -i '1d' keyauth.yaml
-       cat keyauth.yaml >> combined-plugins.yaml
+       # cat keyauth.yaml >> combined-plugins.yaml
        echo "key"
        
        yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
        yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
        sed -i '1d' request-size-limiting.yaml
-       cat request-size-limiting.yaml >> combined-plugins.yaml
+       # cat request-size-limiting.yaml >> combined-plugins.yaml
        echo "request"
-              
+
+       cat request-size-limiting.yaml keyauth.yaml > combined-plugins.yaml
+       
        export plugins=$(cat combined-plugins.yaml)
        cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
