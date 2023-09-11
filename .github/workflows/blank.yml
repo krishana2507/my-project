@@ -201,6 +201,7 @@ jobs:
             
           # elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
           elif [[ "${{ vars.Mocking }}" == True ]]; then
+            sed -i '1d' MockingPlugin.yaml
             export a="${{ vars.OAS_SPEC_FILE }}"
             export APISpecification="$(cat $a)"
             echo $APISpecification
@@ -213,6 +214,7 @@ jobs:
          
             
           elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            
             cat ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
