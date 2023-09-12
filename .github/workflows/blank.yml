@@ -158,6 +158,7 @@ jobs:
             cat request-size-limiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            cat modified-api.yaml
          
            fi
     
