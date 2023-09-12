@@ -204,8 +204,9 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-        elif [[ "${KEY_AUTH_ENABLED}" == True ]]; then
-             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+        elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+              export keyname="my_key"
+             yq eval '.plugins.[].config.key_names.[] |= env(keyname)' keyauth.yaml -i
              cat keyauth.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
@@ -223,8 +224,10 @@ jobs:
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
         elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
-              yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
-              yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+              export size="2"
+              export allowedpayloadsize="bytes"
+              yq eval '.plugins.[].config.size_unit |= env(size) request-size-limiting.yaml -i
+              yq eval '.plugins.[].config.allowed_payload_size |= env(allowedpayloadsize)' request-size-limiting.yaml -i
               cat request-size-limiting.yaml > combined-plugins.yaml
               export plugins=$(cat combined-plugins.yaml)
               cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
