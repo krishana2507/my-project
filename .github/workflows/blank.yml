@@ -32,12 +32,12 @@ jobs:
     - name: Set Environment Variables
       run: |
           echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
-          echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
-          # echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
+          echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
       if: github.ref == 'refs/heads/main' 
 
 
@@ -55,11 +55,11 @@ jobs:
 
     - name: Lint OpenAPI Spec
 
-      run: ./inso lint spec ${{ vars.OAS_SPEC_FILE }}
+      run: ./inso lint spec ${{ env.OAS_SPEC_FILE }}
 
     - name: Generate kong.yaml
 
-      run: ./inso generate config ${{ vars.OAS_SPEC_FILE }} --type declarative -o kong.yaml
+      run: ./inso generate config ${{ env.OAS_SPEC_FILE }} --type declarative -o kong.yaml
 
 
     - name: install deck CLI
