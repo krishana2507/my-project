@@ -156,40 +156,719 @@ jobs:
           
     - name: Append Plugins to new-api.yaml
       run: |
-       if [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" ]]; then
-       echo "weroliejfwoqkplkdfshkjd"
-       
-       # sed -i '1d' ratelimmiting.yaml
-       # cat ratelimmiting.yaml >> combined-plugins.yaml
-       # echo "rate"
-       
-       # yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
-       # sed -i '1d' keyauth.yaml
-       # cat keyauth.yaml >> combined-plugins.yaml
-       # echo "key"
-       
-       # yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
-       # yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
-       # sed -i '1d' request-size-limiting.yaml
-       # # cat request-size-limiting.yaml >> combined-plugins.yaml
-       # echo "request"
+      name: Lint OpenAPI Spec                    
+    
 
-       # cat request-size-limiting.yaml keyauth.yaml >> combined-plugins.yaml
-       
-       # export plugins=$(cat combined-plugins.yaml)
-       # cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+on:
+
+  push:
+
+    branches:
+
+      - main
+
+
+
+
+jobs:
+ 
+  OAS_TO_Kong:
+
+    runs-on: ubuntu-latest
+
+
+
+
+    steps:
+
+    - name: Checkout Code
+
+      uses: actions/checkout@v2
+
+ 
+    - name: Set Environment Variables
+      run: |
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
+          # echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
+      if: github.ref == 'refs/heads/main' 
+
+
+
+
+    - name: Install Insomnia CLI
+
+      run: |
+
+        wget   https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz
+
+        tar -xf inso-linux-3.12.0.tar.xz
+
+
+
+    - name: Lint OpenAPI Spec
+
+      run: ./inso lint spec ${{ vars.OAS_SPEC_FILE }}
+
+    - name: Generate kong.yaml
+
+      run: ./inso generate config ${{ vars.OAS_SPEC_FILE }} --type declarative -o kong.yaml
+
+
+    - name: install deck CLI
+
+      run: |
+
+        curl -sL https://github.com/kong/deck/releases/download/v1.17.2/deck_1.17.2_linux_amd64.tar.gz -o deck.tar.gz
+
+        tar -xf deck.tar.gz -C /tmp 
+
+        sudo cp /tmp/deck /usr/local/bin/
+
+    - name: update
+
+      run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
+    - name: download jq
+      run: |
+       sudo apt install jq -y
+         jq --version
+        
+    - name: download yq
+      run: |
+          sudo snap install yq
+          yq --version
+    - name: API Versioning
+      run: |
+          export w="/default"
+          export v="/v1.1"
+          cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
           
-       # elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-       #  cat ratelimmiting.yaml >> combined-plugins.yaml
-       #  export plugins=$(cat combined-plugins.yaml)
-       #  cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-
-       export plugins=$(cat compl.yaml)
-       cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-       
-       fi
    
+
+        
+    - name: Mocking Step
+      run: |
+          if [[ "${MOCKING_ENABLED}" == "true" ]]; then
+            echo "Executing Mocking Step"
+            # Your mocking commands or scripts here
+            sed -i '1d' MockingPlugin.yaml
+          else
+            echo "Mocking Step Skipped"
+          fi
+
+    - name: Key Auth Step
+      run: |
+          if [[ "${KEY_AUTH_ENABLED}" == true ]]; then
+            echo "Executing Key Auth Step"
+            # Your key auth commands or scripts here
+            sed -i '1d' keyauth.yaml
+          else
+            echo "Key Auth Step Skipped"
+          fi
+
+    - name: Rate Limiting Step
+      run: |
+          if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "Executing Rate Limiting Step"
+            # Your rate limiting commands or scripts here
+             sed -i '1d' ratelimmiting.yaml
+          else
+            echo "Rate Limiting Step Skipped"
+          fi
+
+    - name: Basic Auth Step
+      run: |
+          if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Basic Auth Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' basicauthplugin.yaml
+          else
+            echo "Basic Auth Step Skipped"
+          fi 
+
+    - name: request size limiting Step
+      run: |
+          if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "request size limiting Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' request-size-limiting.yaml
+          else
+            echo "request size limiting Step Skipped"
+          fi
+
+    - name: oas validation Step
+      run: |
+          if [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+            echo "request size limiting Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' oas-validation.yaml
+          else
+            echo "oas validation Step Skipped"
+          fi
+          
+    # - name: Append Plugins to new-api.yaml
+    #   run: |
+    #       if [[ "${MOCKING_ENABLED}" == "true" || "${KEY_AUTH_ENABLED}" == "true" ]]; then
+    #         sed -i '1d' MockingPlugin.yaml
+    #         export plugin=$(cat MockingPlugin.yaml)
+    #         cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > modified-api.yaml
+    #       fi
+
+    - name: Append Plugins to new-api.yaml
+      run: |
+        echo weroliejfwoqkplkdfshkjd
+            
+        yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+        echo keyauth
+        #cat keyauth.yaml > combined-plugins.yaml
+            
+        yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+        yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+        echo req
+        sed -i '1d' request-size-limiting.yaml
+     
+        echo ratelimiting
+        sed -i '1d' ratelimmiting.yaml
+      
+        cat  keyauth.yaml request-size-limiting.yaml ratelimmiting.yaml > combined-plugins.yaml  
+        
+        export plugins=$(cat combined-plugins.yaml)
+        cat combined-plugins.yaml
+        
+        echo combined plugins file printed
+        
+        cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+             
+        cat modified-api.yaml
+        
+        if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+           sed -i '1d' ratelimmiting.yaml
+           sed -i '1d' basicauthplugin.yaml
+           sed -i '1d' keyauth.yaml
+           yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+           export a="${{ vars.OAS_SPEC_FILE }}"
+           export APISpecification="$(cat $a)"
+           echo $APISpecification
+           # APISpecification=\"${APISpecification}\
+           yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
+           cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
+           cat combined-plugins.yaml
+           export plugins=$(cat combined-plugins.yaml)
+           cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+           
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' ratelimmiting.yaml
+            sed -i '1d' basicauthplugin.yaml 
+            cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
+            cat combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            sed -i '1d' ratelimmiting.yaml
+            cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' basicauthplugin.yaml
+            cat MockingPlugin.yaml basicauthplugin.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+          # elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+          elif [[ "${{ vars.Mocking }}" == True ]]; then
+            sed -i '1d' MockingPlugin.yaml
+            export a="${{ vars.OAS_SPEC_FILE }}"
+            export APISpecification="$(cat $a)"
+            echo $APISpecification
+            # APISpecification=\"${APISpecification}\
+            yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
+            cat MockingPlugin.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            cat modified-api.yaml
+
+          elif [[ "${RATE_LIMITING_ENABLED}" == "false" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == true ]]; then
+            echo weroliejfwoqkplkdfshkjd
+            
+            yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+            cat keyauth.yaml > combined-plugins.yaml
+            
+            yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+            yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+            cat request-size-limiting.yaml > combined-plugins.yaml
+            
+            cat ratelimmiting.yaml > combined-plugins.yaml
+              
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+             
+          # elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            
+          #   cat ratelimmiting.yaml > combined-plugins.yaml
+          #   export plugins=$(cat combined-plugins.yaml)
+          #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+          #   elif [[ "${KEY_AUTH_ENABLED}" == True ]]; then
+          #    yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+          #    cat keyauth.yaml > combined-plugins.yaml
+          #    export plugins=$(cat combined-plugins.yaml)
+          #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+          # elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+          #   cat basicauthplugin.yaml > combined-plugins.yaml
+          #   export plugins=$(cat combined-plugins.yaml)
+          #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+         # elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+         #    export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+         #    yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
+         #    cat oas-validation.yaml > combined-plugins.yaml
+         #    export plugins=$(cat combined-plugins.yaml)
+         #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+        # elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+        #       yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+        #       yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+        #       cat request-size-limiting.yaml > combined-plugins.yaml
+        #       export plugins=$(cat combined-plugins.yaml)
+        #       cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+        fi
+
+    - name: Setting upstream timeout value
+      run: |
+        export UT="10000"
+        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+    
+    - name: check
+      run: |
+          cat modified-api.yaml
+          deck sync -s modified-api.yaml --kong-addr http://43.205.253.118:8001
+
+      
+    # - name: Commit files
+    #   id: commit
+    #   run: | 
+    #       git config --local user.email "krishna.sharma@neosalpha.com"
+    #       git config --local user.name "krishna2507"
+    #       git add \*.yaml
+    #       if [-z "$(git status --porcelain)"]; then
+    #          echo "::set-output name=push::false"
+    #       else
+    #          git commit -m "Add changes sd" -a
+    #          echo "::set-output name=push::true"
+    #       fi
+    #   shell: bash
+       
+    # - name: Push changes
+    #   if: steps.commit.outputs.push == 'true'
+    #   uses: ad-m/github-push-action@master
+    #   with:
+    #        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    
+  publish-customer-api-to-portal:  # Publish the API to the dev portal
+  
+    name: Publish OAS to dev portal
+
+    needs: OAS_TO_Kong   # Make sure the completed before running this job
+
+    runs-on: ubuntu-latest  # Use Ubuntu as the operating system for the job
+
+    steps:
+
+      - name: Checkout branch  # Checkout the branch from the repository
+
+        uses: actions/checkout@v2
+
+      - name: Install NodeJs  # Install Node.js for running the dev portal CLI
+
+        uses: actions/setup-node@v3
+
+      - name: Install kon-dev-portal-cli  # Install dev portal CLI
+
+        run: npm install -g kong-portal-cli
+
+      - name: Deploy to dev portal
+
+        run: |          
+          sudo cp petstore.yaml workspaces/default/specs
+          portal deploy -D default --preserve 
+
+        env:
+
+          KONG_ADMIN_URL: http://43.205.253.118:8001
+  store-yaml-to-postgres:
+    name: Store YAML to PostgreSQL
+    needs: OAS_TO_Kong
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
+      - name: Install psycopg2
+        run: pip install psycopg2-binary
+
+      - name: Run Python script to store YAML
+        run: python dummy.py
+          
+
+        
+
+   
+        
+   
+         
+    
+         
+
+     
+
+name: Lint OpenAPI Spec                    
+    
+
+
+on:
+
+  push:
+
+    branches:
+
+      - main
+
+
+
+
+jobs:
+ 
+  OAS_TO_Kong:
+
+    runs-on: ubuntu-latest
+
+
+
+
+    steps:
+
+    - name: Checkout Code
+
+      uses: actions/checkout@v2
+
+ 
+    - name: Set Environment Variables
+      run: |
+          echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
+          # echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
+      if: github.ref == 'refs/heads/main' 
+
+
+
+
+    - name: Install Insomnia CLI
+
+      run: |
+
+        wget https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz
+
+        tar -xf inso-linux-3.12.0.tar.xz
+
+
+
+    - name: Lint OpenAPI Spec
+
+      run: ./inso lint spec ${{ vars.OAS_SPEC_FILE }}
+
+    - name: Generate kong.yaml
+
+      run: ./inso generate config ${{ vars.OAS_SPEC_FILE }} --type declarative -o kong.yaml
+
+
+    - name: install deck CLI
+
+      run: |
+
+        curl -sL https://github.com/kong/deck/releases/download/v1.17.2/deck_1.17.2_linux_amd64.tar.gz -o deck.tar.gz
+
+        tar -xf deck.tar.gz -C /tmp 
+
+        sudo cp /tmp/deck /usr/local/bin/
+
+    - name: update
+
+      run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
+    - name: download jq
+      run: |
+       sudo apt install jq -y
+         jq --version
+        
+    - name: download yq
+      run: |
+          sudo snap install yq
+          yq --version
+    - name: API Versioning
+      run: |
+          export w="/default"
+          export v="/v1.1"
+          cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+
+          
+   
+
+        
+    - name: Mocking Step
+      run: |
+          if [[ "${MOCKING_ENABLED}" == "true" ]]; then
+            echo "Executing Mocking Step"
+            # Your mocking commands or scripts here
+            sed -i '1d' MockingPlugin.yaml
+          else
+            echo "Mocking Step Skipped"
+          fi
+
+    - name: Key Auth Step
+      run: |
+          if [[ "${KEY_AUTH_ENABLED}" == true ]]; then
+            echo "Executing Key Auth Step"
+            # Your key auth commands or scripts here
+            sed -i '1d' keyauth.yaml
+          else
+            echo "Key Auth Step Skipped"
+          fi
+
+    - name: Rate Limiting Step
+      run: |
+          if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "Executing Rate Limiting Step"
+            # Your rate limiting commands or scripts here
+             sed -i '1d' ratelimmiting.yaml
+          else
+            echo "Rate Limiting Step Skipped"
+          fi
+
+    - name: Basic Auth Step
+      run: |
+          if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            echo "Executing Basic Auth Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' basicauthplugin.yaml
+          else
+            echo "Basic Auth Step Skipped"
+          fi 
+
+    - name: request size limiting Step
+      run: |
+          if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+            echo "request size limiting Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' request-size-limiting.yaml
+          else
+            echo "request size limiting Step Skipped"
+          fi
+
+    - name: oas validation Step
+      run: |
+          if [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+            echo "request size limiting Step"
+            # Your basic auth commands or scripts here
+             sed -i '1d' oas-validation.yaml
+          else
+            echo "oas validation Step Skipped"
+          fi
+          
+    # - name: Append Plugins to new-api.yaml
+    #   run: |
+    #       if [[ "${MOCKING_ENABLED}" == "true" || "${KEY_AUTH_ENABLED}" == "true" ]]; then
+    #         sed -i '1d' MockingPlugin.yaml
+    #         export plugin=$(cat MockingPlugin.yaml)
+    #         cat new-api.yaml | yq '.services.[] = env(plugin) + .services.[]' -o yaml > modified-api.yaml
+    #       fi
+
+    - name: Append Plugins to new-api.yaml
+      run: |
+    if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+           sed -i '1d' ratelimmiting.yaml
+           sed -i '1d' basicauthplugin.yaml
+           sed -i '1d' keyauth.yaml
+           yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+           export a="${{ vars.OAS_SPEC_FILE }}"
+           export APISpecification="$(cat $a)"
+           echo $APISpecification
+           # APISpecification=\"${APISpecification}\
+           yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
+           cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
+           cat combined-plugins.yaml
+           export plugins=$(cat combined-plugins.yaml)
+           cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+           
+        elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' ratelimmiting.yaml
+            sed -i '1d' basicauthplugin.yaml 
+            cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
+            cat combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+        elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            sed -i '1d' ratelimmiting.yaml
+            cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+        elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' basicauthplugin.yaml
+            cat MockingPlugin.yaml basicauthplugin.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+          # elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+        elif [[ "${{ vars.Mocking }}" == True ]]; then
+            sed -i '1d' MockingPlugin.yaml
+            export a="${{ vars.OAS_SPEC_FILE }}"
+            export APISpecification="$(cat $a)"
+            echo $APISpecification
+            # APISpecification=\"${APISpecification}\
+            yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
+            cat MockingPlugin.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            cat modified-api.yaml
+             
+        elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            
+            cat ratelimmiting.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+        elif [[ "${KEY_AUTH_ENABLED}" == True ]]; then
+             yq eval ".plugins.[].config.key_names.[] |= \"${{vars.KONGKEYNAME}}\"" keyauth.yaml -i
+             cat keyauth.yaml > combined-plugins.yaml
+             export plugins=$(cat combined-plugins.yaml)
+             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+        elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            cat basicauthplugin.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+        elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
+            cat oas-validation.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            
+        elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+              yq eval ".plugins.[].config.size_unit |= \"${{vars.SIZEUNIT}}\"" request-size-limiting.yaml -i
+              yq eval '.plugins.[].config.allowed_payload_size |= ${{vars.ALLOWEDPAYLOADSIZE}}' request-size-limiting.yaml -i
+              cat request-size-limiting.yaml > combined-plugins.yaml
+              export plugins=$(cat combined-plugins.yaml)
+              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+        fi
+
+    - name: Setting upstream timeout value
+      run: |
+        export UT="10000"
+        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+    
+    - name: check
+      run: |
+          cat modified-api.yaml
+          deck sync -s modified-api.yaml --kong-addr http://43.205.253.118:8001
+
+      
+    # - name: Commit files
+    #   id: commit
+    #   run: | 
+    #       git config --local user.email "krishna.sharma@neosalpha.com"
+    #       git config --local user.name "krishna2507"
+    #       git add \*.yaml
+    #       if [-z "$(git status --porcelain)"]; then
+    #          echo "::set-output name=push::false"
+    #       else
+    #          git commit -m "Add changes sd" -a
+    #          echo "::set-output name=push::true"
+    #       fi
+    #   shell: bash
+       
+    # - name: Push changes
+    #   if: steps.commit.outputs.push == 'true'
+    #   uses: ad-m/github-push-action@master
+    #   with:
+    #        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    
+  publish-customer-api-to-portal:  # Publish the API to the dev portal
+  
+    name: Publish OAS to dev portal
+
+    needs: OAS_TO_Kong   # Make sure the completed before running this job
+
+    runs-on: ubuntu-latest  # Use Ubuntu as the operating system for the job
+
+    steps:
+
+      - name: Checkout branch  # Checkout the branch from the repository
+
+        uses: actions/checkout@v2
+
+      - name: Install NodeJs  # Install Node.js for running the dev portal CLI
+
+        uses: actions/setup-node@v3
+
+      - name: Install kon-dev-portal-cli  # Install dev portal CLI
+
+        run: npm install -g kong-portal-cli
+
+      - name: Deploy to dev portal
+
+        run: |          
+          sudo cp petstore.yaml workspaces/default/specs
+          portal deploy -D default --preserve 
+
+        env:
+
+          KONG_ADMIN_URL: http://43.205.253.118:8001
+  store-yaml-to-postgres:
+    name: Store YAML to PostgreSQL
+    needs: OAS_TO_Kong
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
+      - name: Install psycopg2
+        run: pip install psycopg2-binary
+
+      - name: Run Python script to store YAML
+        run: python dummy.py
+          
+
+        
+
+   
+        
+   
+         
+    
+         
+
+     
+
+
 
     - name: Setting upstream timeout value
       run: |
