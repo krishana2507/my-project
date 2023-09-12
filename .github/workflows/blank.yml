@@ -179,36 +179,26 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-        elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-            export SizeUnit="bytes"
-            export AllowedPayloadSize="2"
-            sed -i '1d' ratelimmiting.yaml
-            yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
-             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
-            cat request-size-limiting.yaml ratelimmiting.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+       
 
-            
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-          elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+       elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             sed -i '1d' basicauthplugin.yaml
             cat MockingPlugin.yaml basicauthplugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
           # elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
-        elif [[ "${{ vars.Mocking }}" == True ]]; then
-            sed -i '1d' MockingPlugin.yaml
-            export a="${{ vars.OAS_SPEC_FILE }}"
-            export APISpecification="$(cat $a)"
-            echo $APISpecification
-            # APISpecification=\"${APISpecification}\
-            yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
-            cat MockingPlugin.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-            cat modified-api.yaml
+        # elif [[ "${{ vars.Mocking }}" == True ]]; then
+        #     sed -i '1d' MockingPlugin.yaml
+        #     export a="${{ vars.OAS_SPEC_FILE }}"
+        #     export APISpecification="$(cat $a)"
+        #     echo $APISpecification
+        #     # APISpecification=\"${APISpecification}\
+        #     yq eval '.plugins.[].config.api_specification |= strenv(APISpecification)' MockingPlugin.yaml -i
+        #     cat MockingPlugin.yaml > combined-plugins.yaml
+        #     export plugins=$(cat combined-plugins.yaml)
+        #     cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+        #     cat modified-api.yaml
              
         # elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             
@@ -216,17 +206,17 @@ jobs:
         #     export plugins=$(cat combined-plugins.yaml)
         #     cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-        elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
-              export keyname="my_key"
-             yq eval '.plugins.[].config.key_names.[] |= env(keyname)' keyauth.yaml -i
-             cat keyauth.yaml > combined-plugins.yaml
-             export plugins=$(cat combined-plugins.yaml)
-             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+        # elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+        #       export keyname="my_key"
+        #      yq eval '.plugins.[].config.key_names.[] |= env(keyname)' keyauth.yaml -i
+        #      cat keyauth.yaml > combined-plugins.yaml
+        #      export plugins=$(cat combined-plugins.yaml)
+        #      cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-        elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
-            cat basicauthplugin.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+        # elif [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+        #     cat basicauthplugin.yaml > combined-plugins.yaml
+        #     export plugins=$(cat combined-plugins.yaml)
+        #     cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
        
             
@@ -239,13 +229,22 @@ jobs:
         #     export plugins=$(cat combined-plugins.yaml)
         #     cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
-         elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
-            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
-            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
-            cat oas-validation.yaml > combined-plugins.yaml
+         # elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+         #    export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+         #    yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
+         #    cat oas-validation.yaml > combined-plugins.yaml
+         #    export plugins=$(cat combined-plugins.yaml)
+         #    cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
+         elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            export SizeUnit="bytes"
+            export AllowedPayloadSize="2"
+            sed -i '1d' ratelimmiting.yaml
+            yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
+             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
+            cat request-size-limiting.yaml ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-
         fi
 
     # - name: Setting upstream timeout value
