@@ -243,7 +243,7 @@ jobs:
     - name: Setting upstream timeout value
       run: |
         export UT="10000"
-        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+        yq eval '.services.[].connect_timeout |= env(UT)'> modified-api.yaml -i
     
     - name: check
       run: |
