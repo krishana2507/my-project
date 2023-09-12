@@ -90,6 +90,12 @@ jobs:
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
+    - name: Setting upstream timeout value
+      run: |
+        export UT="10000"
+        yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
+    
+
           
    
 
@@ -242,10 +248,10 @@ jobs:
 
         fi
 
-    - name: Setting upstream timeout value
-      run: |
-        export UT="10000"
-        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+    # - name: Setting upstream timeout value
+    #   run: |
+    #     export UT="10000"
+    #     yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
     
     - name: check
       run: |
