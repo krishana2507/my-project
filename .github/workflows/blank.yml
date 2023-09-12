@@ -20,7 +20,7 @@ jobs:
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "BASIC_AUTH_ENABLED=false" >> $GITHUB_ENV
-          echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "REQUEST_SIZE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
@@ -155,6 +155,11 @@ jobs:
             cat request-size-limiting.yaml ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+          elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+            cat ratelimmiting.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
            fi
     
       - name: check
