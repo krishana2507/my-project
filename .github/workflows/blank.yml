@@ -148,7 +148,7 @@ jobs:
             cat MockingPlugin.yaml basicauthplugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-          elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMIT
+          elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
             sed -i '1d' ratelimmiting.yaml
