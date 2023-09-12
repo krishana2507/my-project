@@ -222,12 +222,7 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
-        elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
-            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
-            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
-            cat oas-validation.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+       
             
         # elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
         #     export SizeUnit="bytes"
@@ -238,12 +233,19 @@ jobs:
         #     export plugins=$(cat combined-plugins.yaml)
         #     cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
+         elif [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+            export config.api_spec="${{ env.OAS_SPEC_FILE }}"
+            yq eval '.plugins.[].config.api_spec |= env(config.api_spec)' oas-validation.yaml -i
+            cat oas-validation.yaml > combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+
         fi
 
     - name: Setting upstream timeout value
       run: |
         export UT="10000"
-        yq eval '.services.[].connect_timeout |= env(UT)'> modified-api.yaml -i
+        yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
     
     - name: check
       run: |
