@@ -1,36 +1,21 @@
-name: Lint OpenAPI Spec                    
-    
-
+name: Kong API Gateway Workflow
 
 on:
-
   push:
-
     branches:
-
       - main
 
-
-
-
 jobs:
- 
-  OAS_TO_Kong:
 
+  OAS_TO_Kong:
     runs-on: ubuntu-latest
 
-
-
-
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Checkout Code
-
-      uses: actions/checkout@v2
-
- 
-    - name: Set Environment Variables
-      run: |
+      - name: Set Environment Variables
+        run: |
           echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
@@ -38,70 +23,51 @@ jobs:
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=false" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
-      if: github.ref == 'refs/heads/main' 
+        if: github.ref == 'refs/heads/main'
 
+      - name: Install Insomnia CLI
+        run: |
+          wget https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz
+          tar -xf inso-linux-3.12.0.tar.xz
 
+      - name: Lint OpenAPI Spec
+        run: ./inso lint spec ${{ env.OAS_SPEC_FILE }}
 
+      - name: Generate kong.yaml
+        run: ./inso generate config ${{ env.OAS_SPEC_FILE }} --type declarative -o kong.yaml
 
-    - name: Install Insomnia CLI
+      - name: install deck CLI
+        run: |
+          curl -sL https://github.com/kong/deck/releases/download/v1.17.2/deck_1.17.2_linux_amd64.tar.gz -o deck.tar.gz
+          tar -xf deck.tar.gz -C /tmp 
+          sudo cp /tmp/deck /usr/local/bin/
 
-      run: |
+      - name: update
+        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
 
-        wget https://github.com/Kong/insomnia/releases/download/lib%403.12.0/inso-linux-3.12.0.tar.xz
+      - name: download jq
+        run: |
+          sudo apt install jq -y
+          jq --version
 
-        tar -xf inso-linux-3.12.0.tar.xz
-
-
-
-    - name: Lint OpenAPI Spec
-
-      run: ./inso lint spec ${{ env.OAS_SPEC_FILE }}
-
-    - name: Generate kong.yaml
-
-      run: ./inso generate config ${{ env.OAS_SPEC_FILE }} --type declarative -o kong.yaml
-
-
-    - name: install deck CLI
-
-      run: |
-
-        curl -sL https://github.com/kong/deck/releases/download/v1.17.2/deck_1.17.2_linux_amd64.tar.gz -o deck.tar.gz
-
-        tar -xf deck.tar.gz -C /tmp 
-
-        sudo cp /tmp/deck /usr/local/bin/
-
-    - name: update
-
-      run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
-    - name: download jq
-      run: |
-       sudo apt install jq -y
-         jq --version
-        
-    - name: download yq
-      run: |
+      - name: download yq
+        run: |
           sudo snap install yq
           yq --version
-    - name: API Versioning
-      run: |
+
+      - name: API Versioning
+        run: |
           export w="/default"
           export v="/v1.1"
           cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
-    - name: Setting upstream timeout value
-      run: |
-        export UT="10000"
-        yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
-    
+      - name: Setting upstream timeout value
+        run: |
+          export UT="10000"
+          yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
 
-          
-   
-
-        
-    - name: Mocking Step
-      run: |
+      - name: Mocking Step
+        run: |
           if [[ "${MOCKING_ENABLED}" == "true" ]]; then
             echo "Executing Mocking Step"
             # Your mocking commands or scripts here
@@ -110,8 +76,8 @@ jobs:
             echo "Mocking Step Skipped"
           fi
 
-    - name: Key Auth Step
-      run: |
+      - name: Key Auth Step
+        run: |
           if [[ "${KEY_AUTH_ENABLED}" == true ]]; then
             echo "Executing Key Auth Step"
             # Your key auth commands or scripts here
@@ -120,71 +86,69 @@ jobs:
             echo "Key Auth Step Skipped"
           fi
 
-    - name: Rate Limiting Step
-      run: |
+      - name: Rate Limiting Step
+        run: |
           if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             echo "Executing Rate Limiting Step"
             # Your rate limiting commands or scripts here
-             sed -i '1d' ratelimmiting.yaml
+            sed -i '1d' ratelimmiting.yaml
           else
             echo "Rate Limiting Step Skipped"
           fi
 
-    - name: Basic Auth Step
-      run: |
+      - name: Basic Auth Step
+        run: |
           if [[ "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             echo "Executing Basic Auth Step"
             # Your basic auth commands or scripts here
-             sed -i '1d' basicauthplugin.yaml
+            sed -i '1d' basicauthplugin.yaml
           else
             echo "Basic Auth Step Skipped"
-          fi 
+          fi
 
-    - name: request size limiting Step
-      run: |
+      - name: request size limiting Step
+        run: |
           if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
             echo "request size limiting Step"
-            # Your basic auth commands or scripts here
-             sed -i '1d' request-size-limiting.yaml
+            # Your request size limiting commands or scripts here
+            sed -i '1d' request-size-limiting.yaml
           else
             echo "request size limiting Step Skipped"
           fi
 
-    - name: oas validation Step
-      run: |
+      - name: oas validation Step
+        run: |
           if [[ "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
-            echo "request size limiting Step"
-            # Your basic auth commands or scripts here
-             sed -i '1d' oas-validation.yaml
+            echo "OAS Validation Step"
+            # Your OAS validation commands or scripts here
+            sed -i '1d' oas-validation.yaml
           else
-            echo "oas validation Step Skipped"
+            echo "OAS Validation Step Skipped"
           fi
 
-    - name: Append Plugins to new-api.yaml
-      run: |
-       if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
-           sed -i '1d' ratelimmiting.yaml
-           sed -i '1d' basicauthplugin.yaml
-           sed -i '1d' keyauth.yaml
-           cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
-           cat combined-plugins.yaml
-           export plugins=$(cat combined-plugins.yaml)
-           cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
-           
-         elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+      - name: Append Plugins to new-api.yaml
+        run: |
+          if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${KEY_AUTH_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             sed -i '1d' ratelimmiting.yaml
-            sed -i '1d' basicauthplugin.yaml 
+            sed -i '1d' basicauthplugin.yaml
+            sed -i '1d' keyauth.yaml
+            cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml keyauth.yaml > combined-plugins.yaml
+            cat combined-plugins.yaml
+            export plugins=$(cat combined-plugins.yaml)
+            cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+            sed -i '1d' ratelimmiting.yaml
+            sed -i '1d' basicauthplugin.yaml
             cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
             cat combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-            
-         elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+          elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             sed -i '1d' basicauthplugin.yaml
             cat MockingPlugin.yaml basicauthplugin.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-         elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+          elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMIT
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
             sed -i '1d' ratelimmiting.yaml
@@ -193,15 +157,10 @@ jobs:
             cat request-size-limiting.yaml ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-        fi
-
-    # - name: Setting upstream timeout value
-    #   run: |
-    #     export UT="10000"
-    #     yq eval '.services.[].connect_timeout |= env(UT)' modified-api.yaml -i
+           fi
     
-    - name: check
-      run: |
+      - name: check
+        run: |
           cat modified-api.yaml
           deck sync -s modified-api.yaml --kong-addr http://43.205.253.118:8001
 
