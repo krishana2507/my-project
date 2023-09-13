@@ -127,7 +127,7 @@ jobs:
 
       - name: Append Plugins to new-api.yaml
         run: |
-          if [[ "${KEY_AUTH_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+          if [[ "${KEY_AUTH_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true"]]; then
             export apikey="krishna"
             echo "hiiiii"
             export SizeUnit="bytes"
