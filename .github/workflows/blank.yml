@@ -202,6 +202,7 @@ jobs:
              cat oas-validation.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+           fi
            
       - name: check
         run: |  
