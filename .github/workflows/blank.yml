@@ -19,7 +19,7 @@ jobs:
           echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
-          echo "REQUEST_SIZE_LIMITING_ENABLED=false" >> $GITHUB_ENV
+          echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
 
@@ -135,7 +135,7 @@ jobs:
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] = env(plugins) + .services.[]' -o yaml > modified-api.yaml
            
-           elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+           if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
             sed -i '1d' ratelimmiting.yaml
             sed -i '1d' basicauthplugin.yaml 
             cat MockingPlugin.yaml ratelimmiting.yaml basicauthplugin.yaml > combined-plugins.yaml
@@ -143,18 +143,18 @@ jobs:
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-           elif [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+           if [[ "${MOCKING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
              sed -i '1d' ratelimmiting.yaml
              cat MockingPlugin.yaml ratelimmiting.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-           elif [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
+           if [[ "${MOCKING_ENABLED}" == "true" && "${BASIC_AUTH_ENABLED}" == "true" ]]; then
              sed -i '1d' basicauthplugin.yaml
              cat MockingPlugin.yaml basicauthplugin.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-           elif [[ "${MOCKING_ENABLED}" == "true" ]]; then
+           if [[ "${MOCKING_ENABLED}" == "true" ]]; then
              export APISpecification="$(cat $OAS_SPEC_FILE)"
              APISpecification=\"${APISpecification}\"
              echo $APISpecification
@@ -163,19 +163,19 @@ jobs:
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-           elif [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+           if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
              cat ratelimmiting.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-           elif [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
+           if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
              export apikey="krishna"
              yq eval '.plugins.[].config.key_names.[] |= env(apikey)' keyauth.yaml -i
              cat keyauth.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             
-           elif [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+           if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
              export SizeUnit="bytes"
              export AllowedPayloadSize="2"
              yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
