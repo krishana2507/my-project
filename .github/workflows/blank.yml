@@ -169,13 +169,25 @@ jobs:
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
            fi
             
-           if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-             cat ratelimmiting.yaml > combined-plugins.yaml
-             export plugins=$(cat combined-plugins.yaml)
-             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-             echo "hiiiii"
-             cat modified-api.yaml
-           fi
+           # if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
+           #   cat ratelimmiting.yaml > combined-plugins.yaml
+           #   export plugins=$(cat combined-plugins.yaml)
+           #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+           #   echo "hiiiii"
+           #   cat modified-api.yaml
+           # fi
+
+           if [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+              sed -i '1d' request-size-limiting.yaml
+              cat ratelimmiting.yaml request-size-limiting.yaml > combined-plugins.yaml
+              export SizeUnit="bytes"
+              export AllowedPayloadSize="2"
+              yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
+              yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
+              export plugins=$(cat combined-plugins.yaml)
+              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+              cat modified-api.yaml
+            fi
             
            if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
              export apikey="krishna"
@@ -186,16 +198,16 @@ jobs:
              echo "hiiiii"
            fi
            
-           if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
-             export SizeUnit="bytes"
-             export AllowedPayloadSize="2"
-             yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
-             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
-             cat request-size-limiting.yaml > combined-plugins.yaml
-             export plugins=$(cat combined-plugins.yaml)
-             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-             cat modified-api.yaml
-           fi
+           # if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+           #   export SizeUnit="bytes"
+           #   export AllowedPayloadSize="2"
+           #   yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
+           #   yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
+           #   cat request-size-limiting.yaml > combined-plugins.yaml
+           #   export plugins=$(cat combined-plugins.yaml)
+           #   cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+           #   cat modified-api.yaml
+           # fi
            
       - name: check
         run: |  
