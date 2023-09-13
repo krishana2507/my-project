@@ -20,6 +20,7 @@ jobs:
           echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "OAS_VALIDATION_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
 
@@ -63,6 +64,11 @@ jobs:
         run: |
           export UT="10000"
           yq eval '.services.[].connect_timeout |= env(UT)' new-api.yaml -i
+
+      - name: Setting OAS Validation
+           cat oas-validation.yaml > combined-plugins.yaml
+           export plugins=$(cat combined-plugins.yaml)
+           cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
 
       - name: Mocking Step
         run: |
