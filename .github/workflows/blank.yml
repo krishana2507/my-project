@@ -137,6 +137,7 @@ jobs:
             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
             sed -i '1d' request-size-limiting.yaml
             sed -i '1d' ratelimmiting.yaml
+            sed -i '1d' ratelimmiting.yaml
             cat keyauth.yaml request-size-limiting.yaml ratelimmiting.yaml >> combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
