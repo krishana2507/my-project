@@ -183,6 +183,7 @@ jobs:
              cat keyauth.yaml > combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+             echo "hiiiii"
            fi
             
            if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
