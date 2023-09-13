@@ -17,7 +17,7 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
-          echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=true" >> $GITHUB_ENV
@@ -127,7 +127,7 @@ jobs:
 
       - name: Append Plugins to new-api.yaml
         run: |
-          if [[ "${KEY_AUTH_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${OAS_VALIDATION_ENABLED}" == "true" ]]; then
+          if [[ "${KEY_AUTH_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
             export apikey="krishna"
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
@@ -135,8 +135,7 @@ jobs:
             yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
             sed -i '1d' request-size-limiting.yaml
-            sed -i '1d' oas-validation.yaml
-            cat keyauth.yaml request-size-limiting.yaml oas-validation.yaml >> combined-plugins.yaml
+            cat keyauth.yaml request-size-limiting.yaml >> combined-plugins.yaml
             cat combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
