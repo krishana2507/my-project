@@ -129,13 +129,10 @@ jobs:
         run: |
           if [[ "${KEY_AUTH_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
             export apikey="krishna"
-            yq eval '.plugins.[].config.key_names.[] |= env(apikey)' keyauth.yaml -i
-            # cat keyauth.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
             echo "hiiiii"
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
+            yq eval '.plugins.[].config.key_names.[] |= env(apikey)' keyauth.yaml -i
             yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
             yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
             cat keyauth.yaml request-size-limiting.yaml >> combined-plugins.yaml
