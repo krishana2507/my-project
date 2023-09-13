@@ -128,11 +128,11 @@ jobs:
 
       - name: Append Plugins to new-api.yaml
         run: |
-          if [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "false" ]]; then
+          if [[ "${RATE_LIMITING_ENABLED}" == "true" ]]; then
             cat ratelimmiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-
+          if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
             export SizeUnit="bytes"
             export AllowedPayloadSize="2"
             yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
