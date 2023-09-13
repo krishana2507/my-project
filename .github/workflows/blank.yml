@@ -129,16 +129,17 @@ jobs:
       - name: Append Plugins to new-api.yaml
         run: |
           if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" && "${RATE_LIMITING_ENABLED}" == "true" ]]; then
-            sed -i '1d' ratelimmiting.yaml
-            cat ratelimmiting.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            yq '.services.[] += env(plugins)' new-api.yaml -y > modified-api.yaml
-            export SizeUnit="bytes"
-            export AllowedPayloadSize="2"
-            yq ".plugins.[].config.size_unit = env(SizeUnit) | .plugins.[].config.allowed_payload_size = env(AllowedPayloadSize)" request-size-limiting.yaml -y -i
-            cat request-size-limiting.yaml > combined-plugins.yaml
-            export plugins=$(cat combined-plugins.yaml)
-            yq '.services.[] += env(plugins)' modified-api.yaml -y > final-api.yaml
+             sed -i '1d' ratelimmiting.yaml
+             cat ratelimmiting.yaml > combined-plugins.yaml
+             export plugins=$(cat combined-plugins.yaml)
+             yq '.services.[] += env(plugins)' new-api.yaml > modified-api.yaml.tmp
+             export SizeUnit="bytes"
+             export AllowedPayloadSize="2"
+             yq ".plugins.[].config.size_unit = env(SizeUnit) | .plugins.[].config.allowed_payload_size = env(AllowedPayloadSize)" request-size-limiting.yaml -i
+             cat request-size-limiting.yaml > combined-plugins.yaml
+             export plugins=$(cat combined-plugins.yaml)
+             yq '.services.[] += env(plugins)' modified-api.yaml.tmp > final-api.yaml
+             rm modified-api.yaml.tmp
           else
             echo "Both REQUEST_SIZE_LIMITING_ENABLED and RATE_LIMITING_ENABLED should be set to 'true' for this operation."
           fi
