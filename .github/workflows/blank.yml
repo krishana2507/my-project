@@ -1,4 +1,4 @@
-name: Kong API Gateway Workflow
+name: Kong API Gateway Workflow  
 
 on:
   push:
