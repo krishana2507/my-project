@@ -186,38 +186,32 @@ jobs:
              echo "hiiiii"
            fi
            if [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
-             # Remove the first line of request-size-limiting.yaml
-             sed -i '1d' request-size-limiting.yaml
-    
-             # Combine ratelimmiting.yaml and request-size-limiting.yaml into combined-plugins.yaml
-              cat ratelimmiting.yaml request-size-limiting.yaml > combined-plugins.yaml
-    
-             # Export the combined content to the plugins variable
-               export plugins=$(cat combined-plugins.yaml)
-    
-             # Append the combined content to new-api.yaml using yq
-               cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-    
-             # Set environment variables for SizeUnit and AllowedPayloadSize
-               export SizeUnit="bytes"
-               export AllowedPayloadSize="2"
-    
-             # Update the size_unit and allowed_payload_size fields in request-size-limiting.yaml using yq
-               yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
-               yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
-    
-             # Re-combine request-size-limiting.yaml with combined-plugins.yaml
-               cat request-size-limiting.yaml > combined-plugins.yaml
-    
-             # Export the updated combined content to the plugins variable
-               export plugins=$(cat combined-plugins.yaml)
-    
-            # Append the updated combined content to modified-api.yaml using yq
-              cat modified-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
-    
-            # Display the contents of modified-api.yaml
-              cat modified-api.yaml
-           fi
+                                    # Remove the first line of request-size-limiting.yaml
+                                    sed -i '1d' request-size-limiting.yaml
+                                    
+                                    # Combine ratelimmiting.yaml and request-size-limiting.yaml into combined-plugins.yaml
+                                    cat ratelimmiting.yaml request-size-limiting.yaml > combined-plugins.yaml
+                                    
+                                    # Set environment variables for SizeUnit and AllowedPayloadSize
+                                    export SizeUnit="bytes"
+                                    export AllowedPayloadSize="2"
+                                    
+                                    # Update the size_unit and allowed_payload_size fields in request-size-limiting.yaml using yq
+                                    yq eval '(.plugins[] | select(has("name") and .name == "request-size-limiting")).config.size_unit = env(SizeUnit)' request-size-limiting.yaml -i
+                                    yq eval '(.plugins[] | select(has("name") and .name == "request-size-limiting")).config.allowed_payload_size = env(AllowedPayloadSize)' request-size-limiting.yaml -i
+                                    
+                                    # Combine the modified request-size-limiting.yaml and ratelimmiting.yaml into combined-plugins.yaml
+                                    cat ratelimmiting.yaml request-size-limiting.yaml > combined-plugins.yaml
+                                    
+                                    # Export the combined content to the plugins variable
+                                    export plugins=$(cat combined-plugins.yaml)
+                                    
+                                    # Append the combined content to new-api.yaml using yq
+                                    cat new-api.yaml | yq '.services[].plugins += env(plugins)' -o yaml > modified-api.yaml
+                                    
+                                    # Display the contents of modified-api.yaml
+                                    cat modified-api.yaml
+                                fi
            
            # if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
            #   export SizeUnit="bytes"
