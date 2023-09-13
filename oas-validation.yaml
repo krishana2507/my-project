@@ -1,4 +1,3 @@
-_format_version: "3.0"
 plugins:
 - config:
     allowed_header_parameters: Host,Content-Type,User-Agent,Accept,Content-Length
