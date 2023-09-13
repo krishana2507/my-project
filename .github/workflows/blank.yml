@@ -17,7 +17,7 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
-          echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
+          echo "KEY_AUTH_ENABLED=false" >> $GITHUB_ENV
           echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=true" >> $GITHUB_ENV
           echo "OAS_VALIDATION_ENABLED=true" >> $GITHUB_ENV
@@ -210,6 +210,7 @@ jobs:
              yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
              sed -i '1d' oas-validation.yaml
              cat request-size-limiting.yaml oas-validation.yaml >> combined-plugins.yaml
+             cat combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
              cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
              cat modified-api.yaml
