@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "MOCKING_ENABLED=false" >> $GITHUB_ENV
           echo "KEY_AUTH_ENABLED=true" >> $GITHUB_ENV
-          echo "RATE_LIMITING_ENABLED=true" >> $GITHUB_ENV
+          echo "RATE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "REQUEST_SIZE_LIMITING_ENABLED=false" >> $GITHUB_ENV
           echo "OAS_SPEC_FILE=petstore.yaml" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
