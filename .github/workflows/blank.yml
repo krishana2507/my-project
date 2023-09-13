@@ -193,10 +193,11 @@ jobs:
              export AllowedPayloadSize="2"
              yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
              yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
-    
+            sed -i '1d' request-size-limiting.yaml
             cat request-size-limiting.yaml > combined-plugins.yaml
             export plugins=$(cat combined-plugins.yaml)
             cat modified-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+            cat modified-api.yaml
            fi
            # if [[ "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
            #   export SizeUnit="bytes"
