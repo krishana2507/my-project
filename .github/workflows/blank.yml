@@ -177,7 +177,7 @@ jobs:
            #   cat modified-api.yaml
            # fi
 
-           if [[ "${RATE_LIMITING_ENABLED}" == "true" && "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
+           if [[ "${RATE_LIMITING_ENABLED}" == "true" and "${REQUEST_SIZE_LIMITING_ENABLED}" == "true" ]]; then
               sed -i '1d' request-size-limiting.yaml
               cat ratelimmiting.yaml request-size-limiting.yaml > combined-plugins.yaml
               export SizeUnit="bytes"
