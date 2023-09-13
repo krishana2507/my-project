@@ -208,7 +208,6 @@ jobs:
              export AllowedPayloadSize="2"
              yq eval '.plugins.[].config.size_unit |= env(SizeUnit)' request-size-limiting.yaml -i
              yq eval '.plugins.[].config.allowed_payload_size |= env(AllowedPayloadSize)' request-size-limiting.yaml -i
-             sed -i '1d' oas-validation.yaml
              cat request-size-limiting.yaml oas-validation.yaml >> combined-plugins.yaml
              cat combined-plugins.yaml
              export plugins=$(cat combined-plugins.yaml)
