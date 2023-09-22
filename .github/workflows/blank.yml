@@ -42,7 +42,8 @@ jobs:
           sudo cp /tmp/deck /usr/local/bin/
 
       - name: update
-        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
+        # run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-kong.yaml
+        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong.yaml --output-file new-api.yaml
 
       - name: download jq
         run: |
@@ -54,11 +55,11 @@ jobs:
           sudo snap install yq
           yq --version
 
-      - name: API Versioning
-        run: |
-          export w="/default"
-          export v="/v1.1"
-          cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
+      # - name: API Versioning
+      #   run: |
+      #     export w="/default"
+      #     export v="/v1.1"
+      #     cat new-kong.yaml | yq '.services.[].routes.[].paths.[] = env(w)+env(v) + .services.[].routes.[].paths.[]' -o yaml > new-api.yaml
 
       - name: Setting upstream timeout value
         run: |
