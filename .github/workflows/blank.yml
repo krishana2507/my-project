@@ -195,7 +195,7 @@ jobs:
            # fi
             
            # if [[ "${KEY_AUTH_ENABLED}" == "true" ]]; then
-           #   export apikey="krishna"
+           #   export apikey="keyname"
            #   yq eval '.plugins.[].config.key_names.[] |= env(apikey)' keyauth.yaml -i
            #   cat keyauth.yaml > combined-plugins.yaml
            #   export plugins=$(cat combined-plugins.yaml)
