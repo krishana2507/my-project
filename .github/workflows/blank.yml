@@ -274,7 +274,7 @@ jobs:
       - name: Deploy to dev portal
 
         run: |          
-          sudo cp petstore.yaml workspaces/default/specs
+          sudo cp test.yaml workspaces/default/specs
           portal deploy -D default --preserve 
 
         env:
