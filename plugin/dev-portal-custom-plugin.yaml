@@ -1,0 +1,17 @@
+_format_version: "3.0"
+plugins:
+- config:
+    admin_api_token: spat_fEobaOpUqKRjOIb23KBJVhdORBJQbL1DPyh5dGIhlstwBSJKs
+    admin_api_url: https://us.api.konghq.com/v2
+    control_plane_id: 1cbc075f-d240-4c1a-adce-8d23b22cf315
+    developer_id: a4de9169-5d2a-494e-8411-4d44c555abd9
+    developer_portal_url: https://e475265fea1a.us.portal.konghq.com/
+    header_value: Krishna-Header-Kong
+    product_name: Krishna-API-Product-k8s-values
+    service_id: 9fff2db4-7d27-4a9a-b9c8-5c1cc20fa47f
+    service_name: product-service
+    version_name: v1
+  enabled: true
+  name: my-plugin
+  protocols:
+  - http
