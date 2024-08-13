@@ -3,5 +3,6 @@ plugin_file_path:
   - plugin/keyauth.yaml
   - plugin/ratelimmiting.yaml
   - plugin/correlation.yaml
+  - plugin/ip-restriction.yaml
 global_file_path:
   - global-plugin/request-size-limiting.yaml
