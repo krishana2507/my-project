@@ -1,0 +1,17 @@
+_format_version: "3.0"
+plugins:
+- config:
+    allow:
+    - 49.249.17.98
+    deny: null
+    message: The service is currently unavailable.
+    status: null
+  enabled: false
+  name: ip-restriction
+  protocols:
+  - http
+  - https
+  - tcp
+  - tls
+  - grpc
+  - grpcs
