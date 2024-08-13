@@ -1,0 +1,13 @@
+_format_version: "3.0"
+plugins:
+- config:
+    echo_downstream: false
+    generator: uuid
+    header_name: x-uos-correlation-id
+  enabled: true
+  name: correlation-id
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
