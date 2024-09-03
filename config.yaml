@@ -1,4 +1,5 @@
-oas_file_path: "oas/petstore.yaml" 
+# oas_repo_url: 
+# oas_file_path: "oas/petstore.yaml" 
 plugin_file_path: 
   - plugin/keyauth.yaml
   - plugin/ratelimmiting.yaml
