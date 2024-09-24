@@ -1,7 +1,7 @@
-oas_repo:
-  url: "https://github.com/krishana2507/petstore-api.git"
-  branch: "main"
-  file_path: "petstore.yaml"
+# oas_repo:
+#   url: "https://github.com/krishana2507/petstore-api.git"
+#   branch: "main"
+#   file_path: "petstore.yaml"
 plugin_file_path: 
   - plugin/keyauth.yaml
   - plugin/ratelimmiting.yaml
